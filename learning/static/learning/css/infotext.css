@@ -1,0 +1,24 @@
+.infotext {
+    color:#069;
+    cursor:pointer;
+    position: relative;       /* anchor for the absolute popup */
+    overflow: visible;        /* allow popup to extend outside button */
+}
+.description {
+    display:none;
+    position:absolute;
+    top: 110%;                /* show below the "button" */
+    left: 0;
+    z-index: 99999;           /* sit above datatable chrome */
+    border:1px solid #000;
+    width:300px;
+    height:200px;
+    background-color: #fff;
+    overflow: auto;
+    pointer-events: auto;     /* CRITICAL */
+}
+.description embed {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
