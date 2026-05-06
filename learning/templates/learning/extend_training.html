@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}CTP Training Extend{% endblock %}
+
+{% block head_ico %}
+  {% load static %}
+  <link rel="icon" href="{% static 'learning/img/update.ico' %}" type="image/x-icon">
+{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        {% include "_messages.html" %}
+        {% block content %}
+          <h3>Extend training</h3>
+          <hr style="background-color:green;border:none;height:1px;">
+          {% if user.is_authenticated %}
+            <p>
+              Course: <b>
+                {% if training_instance.course %}
+                  {{ training_instance.course }}
+                {% else %}
+                  <span style="color: #F54927;">Unknown</span>
+                {% endif %}</b><br>
+                {% if previous_completion_date %}
+                  Previous completion date: <b>
+                  {{ previous_completion_date | date:"d/m/Y" }}
+                {% else %}
+                  <span style="color: #F54927;">Unknown</span>
+                {% endif %}</b><br>
+            </p>
+            <form action="" method="post">
+              {% csrf_token %}
+              {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                  {% for error in form.non_field_errors %}
+                    <div>{{ error }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+              <table>
+                {{ form.as_table }}
+              </table>
+              <p>
+                Training will be extended for <b>
+                {% if renewal_period %}
+                  {{ renewal_period }} year(s)
+                {% else %}
+                  <span style="color: #F54927;">Unknown</span>
+                {% endif %}</b> (calculated based on new completion date you provide here).
+              </p>
+              <br><input type="submit" id="submit-btn" class="btn rounded-5 btn-success border-2" style="font-size:16px; padding:6px 24px; color:white;" value="Extend training" {% if success %}disabled{% endif %}> &nbsp;
+              <a href="{% url 'training' %}" class="btn rounded-5 btn-outline-secondary border-2" style="font-size:16px; padding:6px 24px; color:#333; background-color:#f8f9fa;">{% if success %}Go back{% else %}Cancel{% endif %}</a>
+            </form>
+            <script>
+              const success = {{ success|yesno:"true,false" }};
+              const submitBtn = document.getElementById("submit-btn");
+
+              if (success && submitBtn) {
+                submitBtn.disabled = true;
+              }
+            </script>
+          {% else %}
+          <p style="font-size:20px;">
+            Please <a href="{% url 'account_signup' %}">register</a> or <a href="{% url 'account_login' %}">sign in</a> to your account.
+          </p>
+          {% endif %}
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

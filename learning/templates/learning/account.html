@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}CTP Account{% endblock %}
+
+{% block body %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      {% block content %}
+      <br><h2>Account</h2>
+      {% if user.is_authenticated %}
+        <p>Time of your last login: {{ user.last_login }}</p>
+        <hr style="background-color:green;border:none;height:1px;">
+        <div>
+          <table style="width: 60%;">
+            <tr>
+              <th>Name: </th>
+              <th>{{ user.first_name | title }} {{ user.last_name | title }}</th>
+            </tr>
+            <tr>
+              <th>Username: </th>
+              <th>{{ user.username }}</th>
+              <th><a href="{% url 'account_change_password' %}">Change password</a></th>
+            </tr>
+            <tr>
+              <th>Email: </th>
+              <th>{{ user.email }}</th>
+<!--              <th><a href="{% url 'account_email' %}">Change or add email</a></th>-->
+            </tr>
+            <tr>
+              <th>Account type: </th>
+              <th>{% if user.is_staff %} Administrator {% else %} Regular user {% endif %}</th>
+            </tr>
+            {% if user.groups.exists %}
+            <tr>
+              <th>Your groups: </th>
+              <th>{{ user.groups.all | join:"," }}</th>
+            </tr>
+            {% endif %}
+          </table>
+        </div>
+        <hr style="background-color:green;border:none;height:1px;">
+        <hr style="background-color:green;border:none;height:1px;">
+      {% else %}
+      <p style="font-size:20px;">
+        Please register or sign in to your account.
+        <br><a href="{% url 'account_reset_password' %}">Lost password?</a>
+      </p>
+      {% endif %}
+      {% endblock %}
+    </div>
+  </div>
+</div>
+{% endblock %}

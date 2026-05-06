@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <br><h2>Course: {{ course.course_name }}</h2>
+      <hr style="background-color:green;border:none;height:1px;">
+      <div>
+        <table>
+          <tr>
+            <th style="text-align: right;">Mandatory course: </th>
+            <th>{% if course.is_mandatory %} yes {% else %} no {% endif %}</th>
+          </tr>
+          <tr>
+            <th style="text-align: right;">Renewal period: </th>
+            <th>{% if course.renewal_period != 0 %}{{ course.renewal_period }} year(s){% else %}no renewal{% endif %}</th>
+          </tr>
+        </table>
+        <p><b>Description:</b></p>
+        <p>{{ course.course_description }}</p>
+      </div>
+    </div>
+  </div>
+</div>

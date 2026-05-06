@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}CTP Training New{% endblock %}
+
+{% block head_ico %}
+  {% load static %}
+  <link rel="icon" href="{% static 'learning/img/add.ico' %}" type="image/x-icon">
+{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        {% include "_messages.html" %}
+        {% block content %}
+          <h3>Add training</h3>
+          <hr style="background-color:green;border:none;height:1px;">
+          {% if user.is_authenticated %}
+            <p>
+              Training expiry date will be calculated based on the course you select here and your completion date.
+            </p>
+            <form action="" method="post" id="add-training-form">
+              {% csrf_token %}
+              {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                  {% for error in form.non_field_errors %}
+                    <div>{{ error }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+              <table>
+                {{ form.as_table }}
+              </table>
+              <br><p><b>Training renewal period: </b><span id="course_renewal_period">{% if training_instance.course.renewal_period %}{{ training_instance.course.renewal_period }} year(s) {% else %}Select a course{% endif %}</span></p>
+              <br><input type="submit" id="submit-btn" class="btn rounded-5 btn-success border-2" style="font-size:16px; padding:6px 24px; color:white;" value="{% if success %}Add another{% else %}Add training{% endif %}"> &nbsp;
+              <a href="{% url 'training' %}" class="btn rounded-5 btn-outline-secondary border-2" style="font-size:16px; padding:6px 24px; color:#333; background-color:#f8f9fa;">{% if success %}Go back{% else %}Cancel{% endif %}</a>
+            </form>
+            <script>
+              // update renewal period for selected course
+              const renewalPeriod = {{ renewal_period_json|safe }};
+              const nonrecurringCourseIds = {{ nonrecurring_course_ids_json|safe }};
+              const courseField = document.getElementById("id_course");
+              const renewalPeriodElem = document.getElementById("course_renewal_period");
+
+              function updateRenewalPeriod() {
+                if (!courseField || !renewalPeriodElem) {
+                  return;
+                }
+
+                const courseId = Number(courseField.value);
+                // no course selected
+                if (!courseId) {
+                  renewalPeriodElem.textContent =
+                    "Select a course.";
+                  return;
+                }
+
+                // nonrecurring course
+                if (nonrecurringCourseIds.includes(courseId)) {
+                  renewalPeriodElem.textContent = "No need to retake this course.";
+                  return;
+                }
+
+                // get renewal period
+                const years = renewalPeriod[courseId];
+
+                // explicitly handle 0
+                if (years === 0) {
+                  renewalPeriodElem.textContent =
+                    "No need to retake this course.";
+                  return;
+                }
+
+                // valid renewal period
+                if (years !== undefined) {
+                  renewalPeriodElem.textContent =
+                    years + " year(s)";
+                  return;
+                }
+
+                // fallback
+                renewalPeriodElem.textContent =
+                  "Training renewal period: Select a course.";
+              }
+
+              if (courseField) {
+                courseField.addEventListener("change", updateRenewalPeriod);
+              }
+
+              // initial load
+              updateRenewalPeriod();
+
+              // 'Add another' to reset form after success
+              const form = document.getElementById("add-training-form");
+              const submitBtn = document.getElementById("submit-btn");
+
+              submitBtn.addEventListener("click", function (e) {
+                // if button is acting as "Add another"
+                if (submitBtn.value === "Add another") {
+                  e.preventDefault(); // stop form submission
+
+                  // reset the form
+                  form.reset();
+
+                  // explicitly reset course <select>
+                  if (courseField) {
+                    courseField.selectedIndex = 0;
+                  }
+                  if (renewalPeriodElem) {
+                    renewalPeriodElem.textContent = "Select a course.";
+                  }
+
+                  // remove confirmation message
+                  const msg = document.querySelector(".alert");
+                  if (msg) msg.remove();
+
+                  // restore submit state
+                  submitBtn.value = "Add training";
+                  submitBtn.type = "submit";
+                }
+                // else: normal submit proceeds naturally
+              });
+            </script>
+          {% else %}
+          <p style="font-size:20px;">
+            Please <a href="{% url 'account_signup' %}">register</a> or <a href="{% url 'account_login' %}">sign in</a> to your account.
+          </p>
+          {% endif %}
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
