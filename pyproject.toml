@@ -1,0 +1,137 @@
+[project]
+name = "Customer Management Portal"
+version = "0.0.0"  # x-release-please-version
+requires-python = ">= 3.14"
+dependencies = [
+    "Django==6.0.4",
+    "django-allauth==65.16.1",
+    "django-allauth-ui==1.8.1",
+    "django-widget-tweaks==1.5.1",
+    "python-dotenv==1.2.2",
+    "slippers==0.7.0",
+    "typeguard==2.13.3",  # this version is required by slippers v0.7.0
+#    "whitenoise==6.12.0",
+#    "gunicorn==25.3.0",
+]
+optional-dependencies.dev = [
+    "black>=26.3",
+    "ruff>=0.15",
+    "bandit>=1.9",
+    "isort>=8.0",
+    "yamllint>=1.38",
+    "yamlfix>=1.19",
+    "pre-commit>=4.6",
+]
+optional-dependencies.test = [
+    "pytest>=9.0",
+    "pytest-cov>=7.1",
+    "pytest-django==4.12.0",
+]
+
+[pytest]
+DJANGO_SETTINGS_MODULE = "learning.settings"
+python_files = [
+    "test_*.py",
+    "*_tests.py",
+]
+django_debug_mode = false
+addopts = "--reuse-db --durations=10"  # use reusable database for faster local test runs and show slow tests
+
+[tool.coverage.run]
+branch = true
+source = [
+    "learning",
+]
+omit = [
+    "tests/*",
+    "*/migrations/*"
+]
+
+[tool.coverage.report]
+skip_empty = true
+
+[tool.black]
+line-length = 120
+#skip-string-normalization = true
+target-version = ["py310", "py314"]
+extend-exclude = '''.*test_.*'''
+
+[tool.isort]
+profile = "black"
+
+[tool.bandit]
+exclude_dirs = [".venv", "build"]
+skips = ["B403"]  # blacklist_imports pickle
+
+[tool.bandit.assert_used]
+skips = [
+    "*_test.py",
+    "*test_*.py",
+]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+  "D",    # https://beta.ruff.rs/docs/rules/#pydocstyle-d
+  "E",    # https://beta.ruff.rs/docs/rules/#error-e
+  "F",    # https://beta.ruff.rs/docs/rules/#pyflakes-f
+  "I",    # https://beta.ruff.rs/docs/rules/#isort-i
+  "N",    # https://beta.ruff.rs/docs/rules/#pep8-naming-n
+  "S",    # https://docs.astral.sh/ruff/rules/#flake8-bandit-s
+  "W",    # https://beta.ruff.rs/docs/rules/#warning-w
+]
+ignore = [
+  "D100",     # Missing docstring in public module
+#  "D101",     # Missing docstring in public class
+#  "D400",     # First line should end with a period
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = [
+  "D104",     # Missing docstring in public package
+  "E402",     # Module level import not at top of file
+]
+"main.py" = [
+#  "D103",     # Missing docstring in public function
+  "E402",     # Module level import not at top of file
+]
+#"views.py" = [
+#  "D103",     # Missing docstring in public function
+#]
+"tests/*" = [
+  "D103",     # Missing docstring in public function
+  "S101",     # Use of `assert` detected
+
+]
+#"models.py" = [
+#  "D102",     # Missing docstring in public method
+#  "D105",     # Missing docstring in magic method
+#]
+"migrations*/" = ["ALL"]
+"migrations/*" = ["ALL"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"  # Accepts one of {google,numpy,pep257}
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+[tool.yamlfix]
+allow_duplicate_keys = true
+line_length = 120
+none_representation = ""
+whitelines = 1
+section_whitelines = 1
+sequence_style = "keep_style"
+# the following are default settings
+indent_mapping = 2
+indent_offset = 2
+indent_sequence= 4
+comments_min_spaces_from_content = 2
+comments_require_starting_space = true
+explicit_start = true
+quote_keys_and_basic_values = false
+quote_representation = "'"

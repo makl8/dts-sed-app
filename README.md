@@ -3,6 +3,7 @@
 ![Django badge](https://img.shields.io/badge/django-092E20?logo=django&logoColor=white) 
 
 ## Description
+Version: 0.0.0  <!-- x-release-please-version -->
 
 The Central Training Portal (CTP) is a Django application for managing and recording training information. \
 
