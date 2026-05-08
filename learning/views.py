@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.db import transaction
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
@@ -16,7 +17,6 @@ from django.views.generic import DeleteView, DetailView, TemplateView
 
 from learning.forms import AddTrainingModelForm, ExtendTrainingModelForm
 from learning.models import Course, Training
-from django.contrib.auth.models import User
 
 logger = logging.getLogger(__name__)
 

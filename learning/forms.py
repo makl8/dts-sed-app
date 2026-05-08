@@ -1,8 +1,8 @@
 from allauth.account.forms import SignupForm
-from django.forms import ModelForm
-from django.forms.widgets import HiddenInput
 from django import forms as dj_forms
 from django.core.validators import RegexValidator
+from django.forms import ModelForm
+from django.forms.widgets import HiddenInput
 from django.utils.translation import gettext_lazy as _
 
 from learning.models import Training
@@ -10,7 +10,7 @@ from learning.models import Training
 name_validator = RegexValidator(
     regex=r"^[\p{L}']+(?:[ -][\p{L}']+)*$",
     message=_("Enter a valid name. Letters, spaces, hyphens, and apostrophes only, up to 100 characters. "
-            "Must have at least 2 characters and no consecutive spaces or hyphens."),
+              "Must have at least 2 characters and no consecutive spaces or hyphens."),
     code="invalid_name",
 )
 

@@ -3,8 +3,6 @@ name: Continuous Integration
 run-name: ${{ github.workflow }} - ${{ github.actor }} pushed a change to ${{ github.ref_name }}
 
 on:  # yamllint disable-line rule:truthy
-  push:
-    branches: [main]
   pull_request:
 
 concurrency:

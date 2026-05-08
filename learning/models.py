@@ -35,10 +35,12 @@ class Course(models.Model):
             ),
         ],
     )
+
     class RenewalPeriodChoices(models.IntegerChoices):  # noqa: E301,D106
         TIER0 = 0, _("no renewal")
         TIER1 = 1, _("1 year")
         TIER3 = 3, _("3 years")
+
     renewal_period = models.IntegerField(
         _("Renewal period:"),
         choices=RenewalPeriodChoices,
@@ -102,9 +104,7 @@ class Training(models.Model):
     @property
     def is_near_expired(self):
         """Set to True if the training is nearly expired."""
-        return (
-            self.training_expiry_date < now().date() + timedelta(days=15)) and (self.training_expiry_date >= now().date()
-        )
+        return now().date() + timedelta(days=15) > self.training_expiry_date >= now().date()
 
     @property
     def is_nonrecurring(self):
@@ -121,7 +121,7 @@ class Training(models.Model):
     def save(self, *args, **kwargs):
         """Override save method to set training expiry date and enforce model validation."""
         if not self.training_expiry_date:
-            self.training_expiry_date = self.completion_date + timedelta(days=365*self.course.renewal_period)
+            self.training_expiry_date = self.completion_date + timedelta(days=365 * self.course.renewal_period)
         self.full_clean()
         super().save(*args, **kwargs)
 

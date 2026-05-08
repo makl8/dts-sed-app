@@ -1,5 +1,4 @@
 from django.contrib import admin
-
 from learning.models import Course, Training
 
 admin.site.register(Course)
