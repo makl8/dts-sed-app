@@ -57,7 +57,7 @@ target-version = ["py310", "py314"]
 extend-exclude = '''.*test_.*'''
 
 [tool.isort]
-profile = "black"
+profile = "django"
 
 [tool.bandit]
 exclude_dirs = [".venv", "build"]
