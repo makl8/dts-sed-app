@@ -1,42 +1,40 @@
-# Customer Management Portal
-Customer Management Portal (CMP) is a web application for managing customer data for CoPPS. \
-This is a Software Engineering and DevOps (SED) application, part of the DTS programme.
+# Central Training Portal
 
-![Flask badge](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white)
+![Django badge](https://img.shields.io/badge/django-092E20?logo=django&logoColor=white) 
 
-The application is available at the [CMP website](https://maklcs.eu.pythonanywhere.com/).
+## Description
+
+The Central Training Portal (CTP) is a Django application for managing and recording training information. \
 
 ## How to create a virtual environment and install dependencies
 
 Go to the application's root directory, create a virtual environment and activate it:
 ```shell
-python -m venv venv
-source venv/bin/activate
+python -m venv .venv
+source .venv/bin/activate
 ```
-Install Flask and other dependencies in the virtual environment:
+Install Django and other dependencies in the virtual environment:
 ```shell
+pip install --upgrade pip
 pip install -r requirements/prod.txt
 ```
 
-## How to run the application
+## Testing and Quality
 
-Go to the application's root directory and execute the following two commands in the terminal:
+The repository currently uses GitHub Actions and Python tooling for linting and quality checks.
+
+Key tools include:
+
+- MegaLinter (including ruff, black and yamllint)
+- pytest
+- pytest-cov
+- pytest-django
+
+### How to run the tests
+
+You need `pytest` installed in the `.venv` virtual environment:
 ```shell
-source .env
-flask run
-```
-
-The application is then available at
-`http://127.0.0.1:5000/`
-
-Sourcing the .env file sets two required environmental variables, FLASK_APP and FLASK_ENV 
-(these instructions are provided for and tested on a Mac - modify it accordingly if using a different operating system).
-
-## How to run the tests
-
-You will need `pytest` installed in the `venv` virtual environment:
-```shell
-pip install pytest
+pip install pytest pytest-cov pytest-django
 ```
 unless you have installed the `dev` alongside `prod` dependencies like this:
 ```shell
@@ -46,18 +44,49 @@ in which case you already have it.
 
 Go to the application's root directory and run:
 ```shell
-pytest .
+pytest tests --cov
 ```
 
-## Licence
+### GitHub Actions workflows
+
+The repository currently includes these main workflows:
+
+| Workflow      | Purpose                                  |
+|---------------|------------------------------------------|
+| `ci.yaml`     | Run tests, linting and validation checks |
+
+[//]: # (| `deploy.yaml` | Run deployment                                            |)
+## How to run the application locally
+
+Local development uses `learning.settings` by default. \
+Create a `.env` file in the repository root with at least the Django secret key value:
+
+```env
+SECRET_KEY=<secret_key_value>
+DEBUG=true
+```
+You can also set:
+
+```env
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,[::1]
+DJANGO_LOG_LEVEL=DEBUG
+```
+
+Go to the application's root directory, apply migrations and start the development server:
+
+```bash
+python manage.py migrate
+python manage.py runserver
+```
+
+Application is then available at
+`http://127.0.0.1:8000/`
+
+The default local database is SQLite at `trainingdb.sqlite3` in the application root.
+
+## License
 
 [![License](https://img.shields.io/github/license/Ileriayo/markdown-badges?style=for-the-badge)](LICENSE)
 
 Unless stated otherwise, the codebase is released under the
 [MIT License](LICENSE). This covers both the codebase and any sample code in the documentation.
-
-The documentation is
-[© Crown copyright](http://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/)
-and available under the terms of the
-[Open Government 3.0](http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/)
-licence.
