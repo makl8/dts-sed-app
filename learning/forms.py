@@ -4,7 +4,6 @@ from django.core.validators import RegexValidator
 from django.forms import ModelForm
 from django.forms.widgets import HiddenInput
 from django.utils.translation import gettext_lazy as _
-
 from learning.models import Training
 
 name_validator = RegexValidator(

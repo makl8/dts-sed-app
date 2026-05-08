@@ -14,7 +14,6 @@ from django.utils.timezone import now
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.decorators.http import require_POST
 from django.views.generic import DeleteView, DetailView, TemplateView
-
 from learning.forms import AddTrainingModelForm, ExtendTrainingModelForm
 from learning.models import Course, Training
 
