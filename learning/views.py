@@ -118,9 +118,9 @@ def extend_training(request, pk):
 
     success = False
     renewal_period = training_instance.course.renewal_period
-    previous_completion_date = training_instance.completion_date
+    prev_completion_date = training_instance.completion_date
     # default expiry calculation based on current renewal period
-    calculated_training_expiry_date = previous_completion_date + timedelta(days=365*training_instance.course.renewal_period)
+    calculated_training_expiry_date = prev_completion_date + timedelta(days=365*training_instance.course.renewal_period)
 
     confirmation_message = None
     if request.method == "POST":
@@ -149,7 +149,7 @@ def extend_training(request, pk):
     context = {
         "form": form,
         "training_instance": training_instance,
-        "previous_completion_date": previous_completion_date,
+        "previous_completion_date": prev_completion_date,
         "training_expiry_date": calculated_training_expiry_date,
         "renewal_period": renewal_period,
         "confirmation_message": confirmation_message,
@@ -177,7 +177,10 @@ def bulk_remove_training(request):
 
     if request.POST.get("confirm_removal") == "1":
         with transaction.atomic():
-            Training.objects.filter(user=current_user, pk__in=[training.pk for training in selected_training_list]).delete()
+            Training.objects.filter(
+                user=current_user,
+                pk__in=[training.pk for training in selected_training_list]
+            ).delete()
 
         return HttpResponseRedirect(reverse("training"))
 
