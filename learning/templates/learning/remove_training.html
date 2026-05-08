@@ -38,7 +38,7 @@
               <p>Are you sure you want to remove <strong>{{ training_list.course }}</strong>, completion date: <strong>{{ training_list.completion_date }}</strong>? This action cannot be undone.</p>
               <input type="submit" class="btn rounded-5 btn-success border-2" style="font-size:16px; padding:6px 24px; color:white;" value="Confirm" /> &nbsp;&nbsp;
               <a href="{% url 'training' %}" class="btn rounded-5 btn-outline-secondary border-2" style="font-size:16px; padding:6px 24px; color:#333; background-color:#f8f9fa;">Cancel</a>
-              <p><br>You will need to add training again if in the future completion is required.</p>
+              <p><br>You will need to add training again if in the future completion of this course is required.</p>
             </form>
             {% endif %}
           {% else %}

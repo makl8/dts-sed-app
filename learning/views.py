@@ -200,7 +200,7 @@ class RemoveTrainingView(LoginRequiredMixin, DeleteView):
     def get_queryset(self):
         """Allow deletion of Training objects owned by the current user only."""
         try:
-            current_user = User.objects.get(user=self.request.user)
+            current_user = User.objects.get(username=self.request.user)
         except User.DoesNotExist:
             return Training.objects.none()
         return Training.objects.filter(user=current_user)

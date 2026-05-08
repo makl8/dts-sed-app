@@ -47,7 +47,7 @@ class Course(models.Model):
     )
     is_mandatory = models.BooleanField(_("Select if this is a mandatory course."), default=False)
     date_added = models.DateField(
-        _("Course added to training set."),
+        _("Date added to training set:"),
         null=True,
         blank=True,
     )
