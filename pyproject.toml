@@ -71,7 +71,7 @@ skips = [
 
 [tool.djlint]
 profile="django"
-ignore="H021"
+ignore="H021,T003"
 
 [tool.ruff]
 line-length = 120
