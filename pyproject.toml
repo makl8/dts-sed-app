@@ -73,8 +73,8 @@ max-line-length = 120
 
 [tool.pylint."MESSAGES CONTROL"]
 per-file-ignores = [
-    "manage.py:import-outside-toplevel",
-    "learning/models.py:attribute-defined-outside-init"
+    "manage.py:C0415",  # import-outside-toplevel
+    "learning/models.py:W0201"  # attribute-defined-outside-init
 ]
 disable = [
     "import-error",
