@@ -64,13 +64,17 @@ extend-exclude = """
 [tool.pylint.main]
 #fail-under = 8.0
 ignore-paths = "^learning/migrations/.*$"
+load-plugins = [
+    "pylint_per_file_ignores",
+]
 
 [tool.pylint.format]
 max-line-length = 120
 
 [tool.pylint."MESSAGES CONTROL"]
 per-file-ignores = [
-    "manage.py:import-outside-toplevel"
+    "manage.py:import-outside-toplevel",
+    "learning/models.py:attribute-defined-outside-init"
 ]
 disable = [
     "import-error",
