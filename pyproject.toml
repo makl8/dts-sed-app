@@ -63,7 +63,7 @@ extend-exclude = """
 
 [tool.pylint.main]
 #fail-under = 8.0
-ignore = ["/migrations/"]
+ignore = ["migrations"]
 
 [tool.pylint.format]
 max-line-length = 120
