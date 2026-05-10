@@ -54,17 +54,17 @@ skip_empty = true
 line-length = 120
 #skip-string-normalization = true
 target-version = ["py310", "py314"]
-extend-exclude = '''
+extend-exclude = """
 /(
 .*test_.*
 | */migrations/*
 )/
-'''
+"""
 
 [tool.pylint."MESSAGES CONTROL"]
-disable = [
+disable = """
     "import-error",
-]
+"""
 
 [tool.isort]
 profile = "django"
