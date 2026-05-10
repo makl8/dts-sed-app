@@ -8,8 +8,10 @@ from learning.models import Training
 
 name_validator = RegexValidator(
     regex=r"^[\p{L}']+(?:[ -][\p{L}']+)*$",
-    message=_("Enter a valid name. Letters, spaces, hyphens, and apostrophes only, up to 100 characters. "
-              "Must have at least 2 characters and no consecutive spaces or hyphens."),
+    message=_(
+        "Enter a valid name. Letters, spaces, hyphens, and apostrophes only, up to 100 characters. "
+        "Must have at least 2 characters and no consecutive spaces or hyphens."
+    ),
     code="invalid_name",
 )
 
@@ -22,11 +24,7 @@ class AddTrainingModelForm(ModelForm):
 
         model = Training
         fields = ["user", "course", "completion_date"]
-        widgets = {
-            "completion_date": dj_forms.DateInput(
-                attrs={"type": "date"}
-            )
-        }
+        widgets = {"completion_date": dj_forms.DateInput(attrs={"type": "date"})}
 
     def __init__(self, *args, **kwargs):
         hide_condition = kwargs.pop("hide_fields", None)
@@ -43,11 +41,7 @@ class ExtendTrainingModelForm(ModelForm):
 
         model = Training
         fields = ["completion_date", "training_expiry_date"]
-        widgets = {
-            "completion_date": dj_forms.DateInput(
-                attrs={"type": "date"}
-            )
-        }
+        widgets = {"completion_date": dj_forms.DateInput(attrs={"type": "date"})}
 
     def __init__(self, *args, **kwargs):
         hide_condition = kwargs.pop("hide_fields", None)

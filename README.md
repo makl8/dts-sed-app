@@ -57,7 +57,8 @@ The repository currently includes these main workflows:
 |---------------|------------------------------------------|
 | `ci.yaml`     | Run tests, linting and validation checks |
 
-[//]: # (| `deploy.yaml` | Run deployment                                            |)
+[//]: # (| `deploy.yaml` | Run deployment                           |)
+
 ## How to run the application locally
 
 Local development uses `learning.settings` by default. \

@@ -17,8 +17,10 @@ class Course(models.Model):
         validators=[
             RegexValidator(
                 regex=r"^(?![^\w]*$)(?!.*[.,:!?'()&/\-]{2,})[\w.,:!?'()&/\- ]*[A-Za-z0-9][\w.,:!?'()&/\- ]*$",
-                message=_("Enter a valid course name. Must have at least one word. "
-                          "Letters, numbers, underscores, spaces and basic punctuation allowed up to 200 characters."),
+                message=_(
+                    "Enter a valid course name. Must have at least one word. "
+                    "Letters, numbers, underscores, spaces and basic punctuation allowed up to 200 characters."
+                ),
                 code="invalid_course_name",
             ),
         ],
@@ -29,8 +31,10 @@ class Course(models.Model):
         validators=[
             RegexValidator(
                 regex=r"^[\p{L}\p{N}\p{P}\p{Zs}\n\r]{20,4000}$",
-                message=_("Enter a valid course description. Descriptions may include letters, "
-                          "numbers, spaces and punctuation, and must be between 20 and 4000 characters."),
+                message=_(
+                    "Enter a valid course description. Descriptions may include letters, "
+                    "numbers, spaces and punctuation, and must be between 20 and 4000 characters."
+                ),
                 code="invalid_course_description",
             ),
         ],
@@ -81,8 +85,7 @@ class Training(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="trainings")
     date_added = models.DateField(auto_now_add=True)
     completion_date = models.DateField(
-        _("Course completion date:"),
-        error_messages={"invalid": "Please enter a valid date (DD/MM/YYYY)."}
+        _("Course completion date:"), error_messages={"invalid": "Please enter a valid date (DD/MM/YYYY)."}
     )
     training_expiry_date = models.DateField()
     timestamp = models.DateTimeField(auto_now=True)

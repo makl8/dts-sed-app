@@ -39,8 +39,7 @@ def training_home(request):
             logger.debug(current_user)
         except User.DoesNotExist:
             current_user = None
-        user_training_list = Training.objects.filter(user=current_user).select_related("course") \
-            if current_user else []
+        user_training_list = Training.objects.filter(user=current_user).select_related("course") if current_user else []
         course_dict = {item.course.id: item.course.course_name for item in user_training_list}
         context = {
             "training_list": user_training_list,
@@ -76,7 +75,7 @@ def add_training(request):
             training_instance.user = current_user
             training_instance.course = form.cleaned_data["course"]
             training_instance.completion_date = form.cleaned_data["completion_date"]
-            delta = timedelta(days=365*training_instance.course.renewal_period)
+            delta = timedelta(days=365 * training_instance.course.renewal_period)
             calculated_training_expiry_date = training_instance.completion_date + delta
             training_instance.training_expiry_date = calculated_training_expiry_date
             training_instance.save()
@@ -119,7 +118,9 @@ def extend_training(request, pk):
     renewal_period = training_instance.course.renewal_period
     prev_completion_date = training_instance.completion_date
     # default expiry calculation based on current renewal period
-    calculated_training_expiry_date = prev_completion_date + timedelta(days=365*training_instance.course.renewal_period)
+    calculated_training_expiry_date = prev_completion_date + timedelta(
+        days=365 * training_instance.course.renewal_period
+    )
 
     confirmation_message = None
     if request.method == "POST":
@@ -127,7 +128,7 @@ def extend_training(request, pk):
         if form.is_valid():
             # recalculate expiry date based on renewal period
             training_instance.completion_date = form.cleaned_data["completion_date"]
-            delta = timedelta(days=365*training_instance.course.renewal_period)
+            delta = timedelta(days=365 * training_instance.course.renewal_period)
             calculated_training_expiry_date = training_instance.completion_date + delta
             training_instance.training_expiry_date = calculated_training_expiry_date
             training_instance.save()
@@ -177,8 +178,7 @@ def bulk_remove_training(request):
     if request.POST.get("confirm_removal") == "1":
         with transaction.atomic():
             Training.objects.filter(
-                user=current_user,
-                pk__in=[training.pk for training in selected_training_list]
+                user=current_user, pk__in=[training.pk for training in selected_training_list]
             ).delete()
 
         return HttpResponseRedirect(reverse("training"))
