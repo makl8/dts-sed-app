@@ -57,7 +57,7 @@ target-version = ["py310", "py314"]
 extend-exclude = '''
 /(
 .*test_.*
-| .*migrations*
+| *migrations*
 )/
 '''
 
