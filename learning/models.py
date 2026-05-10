@@ -64,9 +64,9 @@ class Course(models.Model):
         super().clean()
         if self.course_name:
             # Normalize whitespace: strip leading/trailing and collapse internal whitespace
-            self.course_name = " ".join(self.course_name.split())
+            self.course_name = " ".join(self.course_name.split())  # pylint: disable=attribute-defined-outside-init
         if self.course_description:
-            self.course_description = self.course_description.strip()
+            self.course_description = self.course_description.strip()  # pylint: disable=attribute-defined-outside-init
         if self.date_added and self.date_added > now().date():
             raise ValidationError(_("Date added cannot be in the future."))
 
