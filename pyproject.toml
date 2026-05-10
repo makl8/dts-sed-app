@@ -68,7 +68,9 @@ extend-exclude = """
 ignore-paths = "^learning/migrations/.*$"
 load-plugins = [
     "pylint_per_file_ignores",
+    "pylint_django"
 ]
+django-settings-module = "learning.settings"
 
 [tool.pylint.format]
 max-line-length = 120
