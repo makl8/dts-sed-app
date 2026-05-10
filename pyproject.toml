@@ -69,6 +69,9 @@ ignore-paths = "^learning/migrations/.*$"
 max-line-length = 120
 
 [tool.pylint."MESSAGES CONTROL"]
+per-file-ignores = [
+    "manage.py:import-outside-toplevel"
+]
 disable = [
     "import-error",
     "too-few-public-methods",
