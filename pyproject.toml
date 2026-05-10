@@ -61,9 +61,18 @@ extend-exclude = """
 )/
 """
 
+[tool.pylint.main]
+fail-under = 8.0
+ignore = ["migrations"]
+
+[tool.pylint.format]
+max-line-length = 120
+
 [tool.pylint."MESSAGES CONTROL"]
 disable = """
     "import-error",
+    "too-few-public-methods",
+    "missing-module-docstring"
 """
 
 [tool.isort]
