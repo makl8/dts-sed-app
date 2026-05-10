@@ -21,6 +21,8 @@ optional-dependencies.dev = [
     "yamllint>=1.38",
     "yamlfix>=1.19",
     "pre-commit>=4.6",
+    "pylint>=4.0",
+    "pylint_per_file_ignores==3.2.1",
 ]
 optional-dependencies.test = [
     "pytest>=9.0",
@@ -73,8 +75,8 @@ max-line-length = 120
 
 [tool.pylint."MESSAGES CONTROL"]
 per-file-ignores = [
-    "manage.py:C0415",  # import-outside-toplevel
-    "learning/models.py:W0201"  # attribute-defined-outside-init
+    "manage.py:import-outside-toplevel",
+    "learning/models.py:attribute-defined-outside-init"
 ]
 disable = [
     "import-error",
