@@ -61,7 +61,11 @@ extend-exclude = """
 | ^.*\b(migrations)\b.*$
 )/
 """
-force-exclude = "^.*\b(migrations)\b.*$"
+force-exclude = """
+/(
+^.*\b(migrations)\b.*$
+)/
+"""
 
 [tool.pylint.main]
 #fail-under = 8.0
