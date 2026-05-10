@@ -61,6 +61,11 @@ extend-exclude = '''
 )/
 '''
 
+[tool.pylint."messages control"]
+disable = [
+    "import-error",
+]
+
 [tool.isort]
 profile = "django"
 
