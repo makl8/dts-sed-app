@@ -89,7 +89,7 @@ max-parents = 13
 profile = "django"
 
 [tool.bandit]
-exclude_dirs = [".venv", "build", "tests"]
+exclude_dirs = [".venv", "build"]
 skips = ["B403"]  # blacklist_imports pickle
 
 [tool.bandit.assert_used]
