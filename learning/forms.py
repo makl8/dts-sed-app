@@ -18,6 +18,7 @@ name_validator = RegexValidator(
 
 class HideFieldsMixin:
     """Mixin for hiding fields on a form."""
+
     hide_fields_kwarg = "hide_fields"
     hideable_fields: list[str] = []
 
@@ -34,6 +35,7 @@ class HideFieldsMixin:
 
 class AddTrainingModelForm(HideFieldsMixin, ModelForm):
     """Model form for Add training."""
+
     hideable_fields = ["user"]
 
     class Meta:
@@ -46,6 +48,7 @@ class AddTrainingModelForm(HideFieldsMixin, ModelForm):
 
 class ExtendTrainingModelForm(HideFieldsMixin, ModelForm):
     """Model form for Extend training."""
+
     hideable_fields = ["training_expiry_date"]
 
     class Meta:
