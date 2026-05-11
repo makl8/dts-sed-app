@@ -18,10 +18,13 @@ DISABLE_ERRORS_LINTERS:
   - PYTHON_PYLINT
 
 PYTHON_PYLINT_CONFIG_FILE: "pyproject.toml"
-# root-user-action=ignore recommended by pip maintainers for containers
+# root-user-action=ignore recommended for containers, otherwise you get a warning
 PYTHON_PYLINT_PRE_COMMANDS:
   - command: |
-      pip install --root-user-action=ignore django==6.0.5 pylint-django==2.7.0
+      pip install --root-user-action=ignore \
+      django==6.0.5 \
+      pylint-django==2.7.0 \
+      django-allauth
       export PYTHONPATH="$PWD:$PYTHONPATH"
     run_before_linters: true
 

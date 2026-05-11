@@ -62,11 +62,11 @@ force-exclude = """
 )/
 """
 
-
 [tool.pylint.main]
 #fail-under = 8.0
 ignore-paths = "^learning/migrations/.*$"
 load-plugins = ["pylint_django"]
+django-settings-module = "learning.settings"
 
 [tool.pylint.format]
 max-line-length = 120
