@@ -55,16 +55,13 @@ skip_empty = true
 line-length = 120
 #skip-string-normalization = true
 target-version = ["py310", "py314"]
-extend-exclude = """
-/(
-.*test_.*
-)/
-"""
 force-exclude = """
 /(
-/migrations/
+  migrations
+  |.*test_.*
 )/
 """
+
 
 [tool.pylint.main]
 #fail-under = 8.0
