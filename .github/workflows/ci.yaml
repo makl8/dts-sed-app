@@ -43,6 +43,7 @@ jobs:
       - name: Run tests with pytest
         env:
           DJANGO_SETTINGS_MODULE: learning.settings
+          SECRET_KEY: "pytest-only-not-used-at-runtime"
         run: |
           if [ -d tests ]; then pytest tests --cov -vv ; fi
 
