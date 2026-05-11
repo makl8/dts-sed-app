@@ -57,19 +57,15 @@ line-length = 120
 target-version = ["py310", "py314"]
 extend-exclude = """
 /(
-.*test_.*
-| ^.*\b(migrations)\b.*$
-)/
-"""
-force-exclude = """
-/(
-^.*\b(migrations)\b.*$
+/migrations/
+| .*test_.*
 )/
 """
 
 [tool.pylint.main]
 #fail-under = 8.0
 ignore-paths = "^learning/migrations/.*$"
+load-plugins = ["pylint_django"]
 
 [tool.pylint.format]
 max-line-length = 120
@@ -80,6 +76,9 @@ disable = [
     "too-few-public-methods",
     "missing-module-docstring"
 ]
+
+[tool.pylint.design]
+max-parents = 13
 
 [tool.isort]
 profile = "django"
