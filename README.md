@@ -53,9 +53,11 @@ pytest tests --cov
 
 The repository currently includes these main workflows:
 
+<!-- markdown-table-prettify-ignore-start -->
 | Workflow  | Purpose                                   |
 | --------- | ----------------------------------------- |
 | `ci.yaml` | Run tests, linting and validation checks  |
+<!-- markdown-table-prettify-ignore-end -->
 
 ## How to run the application locally
 
