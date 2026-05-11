@@ -65,7 +65,7 @@ force-exclude = """
 
 [tool.pylint.main]
 #fail-under = 8.0
-ignore-paths = "^learning/migrations/.*$"
+ignore-paths = "^learning/migrations/.*$, ^tests/.*$"
 load-plugins = ["pylint_django"]
 django-settings-module = "learning.settings"
 
@@ -91,8 +91,8 @@ skips = ["B403"]  # blacklist_imports pickle
 
 [tool.bandit.assert_used]
 skips = [
-    "*_test.py",
-    "*test_*.py",
+    "tests/*_test.py",
+    "tests/*test_*.py",
 ]
 
 [tool.djlint]
