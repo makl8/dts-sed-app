@@ -56,6 +56,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DJANGO_SETTINGS_MODULE: learning.settings
+          SECRET_KEY: "pylint-only-not-used-at-runtime"
         with:
           flake8_config_path: .flake8
           ruff_config_path: pyproject.toml
