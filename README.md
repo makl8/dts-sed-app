@@ -53,9 +53,9 @@ pytest tests --cov
 
 The repository currently includes these main workflows:
 
-| Workflow      | Purpose                                  |
-|---------------|------------------------------------------|
-| `ci.yaml`     | Run tests, linting and validation checks |
+| Workflow  | Purpose                                   |
+| --------- | ----------------------------------------- |
+| `ci.yaml` | Run tests, linting and validation checks  |
 
 ## How to run the application locally
 
