@@ -1,6 +1,22 @@
 import pytest
-from django.urls import resolve, reverse
+from django.urls import get_resolver, resolve, reverse
 from learning import views
+
+
+# smoke test all routes
+@pytest.mark.django_db
+def test_all_named_routes(client):
+    resolver = get_resolver()
+
+    for name in resolver.reverse_dict:
+        if isinstance(name, str):
+            try:
+                url = reverse(name)
+            except Exception:
+                continue
+
+            response = client.get(url)
+            assert response.status_code in {200, 302, 403}
 
 
 def test_home_route_resolves():

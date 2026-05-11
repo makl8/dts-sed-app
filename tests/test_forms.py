@@ -94,6 +94,7 @@ def test_validate_name_rejects_invalid_values(invalid_name):
 def test_validate_name_accepts_unicode_letters_and_apostrophes():
     validate_name("Eimear O'Connor")
     validate_name("Jose Alvarez")
+    validate_name("Anna Tomáš")
 
 
 def test_learning_signup_form_first_name_rejects_invalid_value():
