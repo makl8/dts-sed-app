@@ -14,11 +14,11 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import include, path
 from django.views.generic import TemplateView
-
 from learning import views
 
 urlpatterns = [
@@ -30,11 +30,10 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     path("about/", TemplateView.as_view(template_name="learning/about.html"), name="about"),
     path("account/", views.AccountView.as_view(), name="account"),
-
     path("training/", views.training_home, name="training"),
-    path("course/<int:pk>/info/", views.CourseDetailView.as_view(), name="course"),
     path("training/new/", views.add_training, name="add_training"),
     path("training/<int:pk>/renew/", views.extend_training, name="extend_training"),
     path("training/remove/", views.bulk_remove_training, name="bulk_remove_training"),
     path("training/<int:pk>/remove/", views.RemoveTrainingView.as_view(), name="remove_training"),
+    path("course/<int:pk>/info/", views.CourseDetailView.as_view(), name="course"),
 ]

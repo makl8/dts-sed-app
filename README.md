@@ -1,6 +1,7 @@
 # Central Training Portal
 
-![Django badge](https://img.shields.io/badge/django-092E20?logo=django&logoColor=white) 
+![Django badge](https://img.shields.io/badge/django-092E20?logo=django&logoColor=white)
+[![Continuous Integration](https://github.com/makl8/dts-sed-app/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/makl8/dts-sed-app/actions/workflows/ci.yaml)
 
 ## Description
 Version: 0.0.0  <!-- x-release-please-version -->
@@ -52,11 +53,12 @@ pytest tests --cov
 
 The repository currently includes these main workflows:
 
-| Workflow      | Purpose                                  |
-|---------------|------------------------------------------|
-| `ci.yaml`     | Run tests, linting and validation checks |
+<!-- markdown-table-prettify-ignore-start -->
+| Workflow  | Purpose                                   |
+| --------- | ----------------------------------------- |
+| `ci.yaml` | Run tests, linting and validation checks  |
+<!-- markdown-table-prettify-ignore-end -->
 
-[//]: # (| `deploy.yaml` | Run deployment                                            |)
 ## How to run the application locally
 
 Local development uses `learning.settings` by default. \

@@ -21,6 +21,7 @@ optional-dependencies.dev = [
     "yamllint>=1.38",
     "yamlfix>=1.19",
     "pre-commit>=4.6",
+    "pylint>=4.0",
 ]
 optional-dependencies.test = [
     "pytest>=9.0",
@@ -54,10 +55,34 @@ skip_empty = true
 line-length = 120
 #skip-string-normalization = true
 target-version = ["py310", "py314"]
-extend-exclude = '''.*test_.*'''
+force-exclude = """
+/(
+  migrations
+  |.*test_.*
+)/
+"""
+
+[tool.pylint.main]
+#fail-under = 8.0
+ignore-paths = "^learning/migrations/.*$"
+load-plugins = ["pylint_django"]
+django-settings-module = "learning.settings"
+
+[tool.pylint.format]
+max-line-length = 120
+
+[tool.pylint."MESSAGES CONTROL"]
+disable = [
+    "too-few-public-methods",
+    "missing-module-docstring",
+    "fixme"
+]
+
+[tool.pylint.design]
+max-parents = 13
 
 [tool.isort]
-profile = "black"
+profile = "django"
 
 [tool.bandit]
 exclude_dirs = [".venv", "build"]
@@ -68,6 +93,10 @@ skips = [
     "*_test.py",
     "*test_*.py",
 ]
+
+[tool.djlint]
+profile="django"
+ignore="H021,T003"
 
 [tool.ruff]
 line-length = 120

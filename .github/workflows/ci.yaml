@@ -3,8 +3,6 @@ name: Continuous Integration
 run-name: ${{ github.workflow }} - ${{ github.actor }} pushed a change to ${{ github.ref_name }}
 
 on:  # yamllint disable-line rule:truthy
-  push:
-    branches: [main]
   pull_request:
 
 concurrency:
@@ -14,6 +12,7 @@ concurrency:
 permissions: {}
 
 jobs:
+
 #  pytest:
 #    name: pytest
 #    runs-on: ubuntu-latest
@@ -53,9 +52,11 @@ jobs:
           persist-credentials: false
 
       - name: MegaLinter
+        uses: oxsecurity/megalinter/flavors/python@v9
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: oxsecurity/megalinter/flavors/python@v9
+          DJANGO_SETTINGS_MODULE: learning.settings
+          SECRET_KEY: "pylint-only-not-used-at-runtime"
         with:
           flake8_config_path: .flake8
           ruff_config_path: pyproject.toml

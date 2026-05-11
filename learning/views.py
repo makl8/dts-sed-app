@@ -2,6 +2,7 @@ import json
 import logging
 from datetime import timedelta
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
@@ -13,11 +14,10 @@ from django.utils.timezone import now
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.decorators.http import require_POST
 from django.views.generic import DeleteView, DetailView, TemplateView
-
 from learning.forms import AddTrainingModelForm, ExtendTrainingModelForm
 from learning.models import Course, Training
-from django.contrib.auth.models import User
 
+User = get_user_model()
 logger = logging.getLogger(__name__)
 
 
@@ -34,14 +34,13 @@ class CourseDetailView(LoginRequiredMixin, DetailView):
 def training_home(request):
     """Render the training page of the Learning app."""
     logger.info("Training home")
-    if request.user.is_authenticated:
+    if request.user.is_authenticated:  # pylint: disable=R1705
         try:
             current_user = User.objects.get(username=request.user)
             logger.debug(current_user)
         except User.DoesNotExist:
             current_user = None
-        user_training_list = Training.objects.filter(user=current_user).select_related("course") \
-            if current_user else []
+        user_training_list = Training.objects.filter(user=current_user).select_related("course") if current_user else []
         course_dict = {item.course.id: item.course.course_name for item in user_training_list}
         context = {
             "training_list": user_training_list,
@@ -69,15 +68,15 @@ def add_training(request):
         # get the related User instance for the current user
         try:
             current_user = User.objects.get(username=request.user)
-        except User.DoesNotExist:
-            raise Http404("User not found.")
+        except User.DoesNotExist as exc:
+            raise Http404("User not found.") from exc
         post_data["user"] = current_user
         form = AddTrainingModelForm(post_data, hide_fields=True)
         if form.is_valid():
             training_instance.user = current_user
             training_instance.course = form.cleaned_data["course"]
             training_instance.completion_date = form.cleaned_data["completion_date"]
-            delta = timedelta(days=365*training_instance.course.renewal_period)
+            delta = timedelta(days=365 * training_instance.course.renewal_period)
             calculated_training_expiry_date = training_instance.completion_date + delta
             training_instance.training_expiry_date = calculated_training_expiry_date
             training_instance.save()
@@ -107,20 +106,22 @@ def extend_training(request, pk):
     # ownership check: only the owner can extend their training
     try:
         current_user = User.objects.get(username=request.user)
-    except User.DoesNotExist:
-        raise Http404("User not found.")
+    except User.DoesNotExist as exc:
+        raise Http404("User not found.") from exc
     try:
         training_instance = Training.objects.get(pk=pk)
-    except Training.DoesNotExist:
-        raise Http404("Training record does not exist.")
+    except Training.DoesNotExist as exc:
+        raise Http404("Training record does not exist.") from exc
     if training_instance.user != current_user:
         raise Http404("You do not have permission to extend this training.")
 
     success = False
     renewal_period = training_instance.course.renewal_period
-    previous_completion_date = training_instance.completion_date
+    prev_completion_date = training_instance.completion_date
     # default expiry calculation based on current renewal period
-    calculated_training_expiry_date = previous_completion_date + timedelta(days=365*training_instance.course.renewal_period)
+    calculated_training_expiry_date = prev_completion_date + timedelta(
+        days=365 * training_instance.course.renewal_period
+    )
 
     confirmation_message = None
     if request.method == "POST":
@@ -128,7 +129,7 @@ def extend_training(request, pk):
         if form.is_valid():
             # recalculate expiry date based on renewal period
             training_instance.completion_date = form.cleaned_data["completion_date"]
-            delta = timedelta(days=365*training_instance.course.renewal_period)
+            delta = timedelta(days=365 * training_instance.course.renewal_period)
             calculated_training_expiry_date = training_instance.completion_date + delta
             training_instance.training_expiry_date = calculated_training_expiry_date
             training_instance.save()
@@ -149,7 +150,7 @@ def extend_training(request, pk):
     context = {
         "form": form,
         "training_instance": training_instance,
-        "previous_completion_date": previous_completion_date,
+        "previous_completion_date": prev_completion_date,
         "training_expiry_date": calculated_training_expiry_date,
         "renewal_period": renewal_period,
         "confirmation_message": confirmation_message,
@@ -165,8 +166,8 @@ def bulk_remove_training(request):
     """Confirm or remove multiple training records owned by the current user."""
     try:
         current_user = User.objects.get(username=request.user)
-    except User.DoesNotExist:
-        raise Http404("User not found.")
+    except User.DoesNotExist as exc:
+        raise Http404("User not found.") from exc
 
     selected_training_ids = request.POST.getlist("selected_training_ids")
     selected_training_list = list(
@@ -177,7 +178,9 @@ def bulk_remove_training(request):
 
     if request.POST.get("confirm_removal") == "1":
         with transaction.atomic():
-            Training.objects.filter(user=current_user, pk__in=[training.pk for training in selected_training_list]).delete()
+            Training.objects.filter(
+                user=current_user, pk__in=[training.pk for training in selected_training_list]
+            ).delete()
 
         return HttpResponseRedirect(reverse("training"))
 

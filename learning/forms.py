@@ -1,60 +1,62 @@
 from allauth.account.forms import SignupForm
-from django.forms import ModelForm
-from django.forms.widgets import HiddenInput
 from django import forms as dj_forms
 from django.core.validators import RegexValidator
+from django.forms import ModelForm
+from django.forms.widgets import HiddenInput
 from django.utils.translation import gettext_lazy as _
-
 from learning.models import Training
 
 name_validator = RegexValidator(
     regex=r"^[\p{L}']+(?:[ -][\p{L}']+)*$",
-    message=_("Enter a valid name. Letters, spaces, hyphens, and apostrophes only, up to 100 characters. "
-            "Must have at least 2 characters and no consecutive spaces or hyphens."),
+    message=_(
+        "Enter a valid name. Letters, spaces, hyphens, and apostrophes only, up to 100 characters. "
+        "Must have at least 2 characters and no consecutive spaces or hyphens."
+    ),
     code="invalid_name",
 )
 
 
-class AddTrainingModelForm(ModelForm):
+class HideFieldsMixin:
+    """Mixin for hiding fields on a form."""
+
+    hide_fields_kwarg = "hide_fields"
+    hideable_fields: list[str] = []
+
+    def __init__(self, *args, **kwargs):
+        self.fields = {}
+        hide_condition = kwargs.pop(self.hide_fields_kwarg, None)
+        super().__init__(*args, **kwargs)
+
+        if hide_condition:
+            for field_name in self.hideable_fields:
+                if field_name in self.fields:
+                    self.fields[field_name].widget = HiddenInput()
+
+
+class AddTrainingModelForm(HideFieldsMixin, ModelForm):
     """Model form for Add training."""
+
+    hideable_fields = ["user"]
 
     class Meta:
         """Meta class for AddTrainingModelForm."""
 
         model = Training
         fields = ["user", "course", "completion_date"]
-        widgets = {
-            "completion_date": dj_forms.DateInput(
-                attrs={"type": "date"}
-            )
-        }
-
-    def __init__(self, *args, **kwargs):
-        hide_condition = kwargs.pop("hide_fields", None)
-        super(AddTrainingModelForm, self).__init__(*args, **kwargs)
-        if hide_condition:
-            self.fields["user"].widget = HiddenInput()
+        widgets = {"completion_date": dj_forms.DateInput(attrs={"type": "date"})}
 
 
-class ExtendTrainingModelForm(ModelForm):
+class ExtendTrainingModelForm(HideFieldsMixin, ModelForm):
     """Model form for Extend training."""
+
+    hideable_fields = ["training_expiry_date"]
 
     class Meta:
         """Meta class for ExtendAccessModelForm."""
 
         model = Training
         fields = ["completion_date", "training_expiry_date"]
-        widgets = {
-            "completion_date": dj_forms.DateInput(
-                attrs={"type": "date"}
-            )
-        }
-
-    def __init__(self, *args, **kwargs):
-        hide_condition = kwargs.pop("hide_fields", None)
-        super().__init__(*args, **kwargs)
-        if hide_condition:
-            self.fields["training_expiry_date"].widget = HiddenInput()
+        widgets = {"completion_date": dj_forms.DateInput(attrs={"type": "date"})}
 
 
 class LearningSignupForm(SignupForm):
