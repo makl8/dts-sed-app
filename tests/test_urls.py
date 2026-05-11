@@ -1,6 +1,5 @@
 import pytest
 from django.urls import resolve, reverse
-
 from learning import views
 
 

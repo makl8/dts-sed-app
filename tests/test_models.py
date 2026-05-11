@@ -3,7 +3,6 @@ from datetime import date, timedelta
 import pytest
 from django.core.exceptions import ValidationError
 from django.utils.timezone import now
-
 from learning.models import Course, Training, validate_course_description
 
 
