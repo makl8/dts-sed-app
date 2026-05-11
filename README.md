@@ -56,9 +56,6 @@ The repository currently includes these main workflows:
 | Workflow      | Purpose                                  |
 |---------------|------------------------------------------|
 | `ci.yaml`     | Run tests, linting and validation checks |
-<!-- markdown-table-prettify-ignore-start -->
-[//]: # (| `deploy.yaml` | Run deployment                           |)
-<!-- markdown-table-prettify-ignore-end -->
 
 ## How to run the application locally
 
