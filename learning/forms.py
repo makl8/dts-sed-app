@@ -16,8 +16,25 @@ name_validator = RegexValidator(
 )
 
 
-class AddTrainingModelForm(ModelForm):
+class HideFieldsMixin:
+    """Mixin for hiding fields on a form."""
+    hide_fields_kwarg = "hide_fields"
+    hideable_fields: list[str] = []
+
+    def __init__(self, *args, **kwargs):
+        self.fields = {}
+        hide_condition = kwargs.pop(self.hide_fields_kwarg, None)
+        super().__init__(*args, **kwargs)
+
+        if hide_condition:
+            for field_name in self.hideable_fields:
+                if field_name in self.fields:
+                    self.fields[field_name].widget = HiddenInput()
+
+
+class AddTrainingModelForm(HideFieldsMixin, ModelForm):
     """Model form for Add training."""
+    hideable_fields = ["user"]
 
     class Meta:
         """Meta class for AddTrainingModelForm."""
@@ -26,15 +43,10 @@ class AddTrainingModelForm(ModelForm):
         fields = ["user", "course", "completion_date"]
         widgets = {"completion_date": dj_forms.DateInput(attrs={"type": "date"})}
 
-    def __init__(self, *args, **kwargs):
-        hide_condition = kwargs.pop("hide_fields", None)
-        super().__init__(*args, **kwargs)
-        if hide_condition:
-            self.fields["user"].widget = HiddenInput()
 
-
-class ExtendTrainingModelForm(ModelForm):
+class ExtendTrainingModelForm(HideFieldsMixin, ModelForm):
     """Model form for Extend training."""
+    hideable_fields = ["training_expiry_date"]
 
     class Meta:
         """Meta class for ExtendAccessModelForm."""
@@ -42,12 +54,6 @@ class ExtendTrainingModelForm(ModelForm):
         model = Training
         fields = ["completion_date", "training_expiry_date"]
         widgets = {"completion_date": dj_forms.DateInput(attrs={"type": "date"})}
-
-    def __init__(self, *args, **kwargs):
-        hide_condition = kwargs.pop("hide_fields", None)
-        super().__init__(*args, **kwargs)
-        if hide_condition:
-            self.fields["training_expiry_date"].widget = HiddenInput()
 
 
 class LearningSignupForm(SignupForm):

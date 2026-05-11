@@ -33,8 +33,8 @@ class CourseDetailView(LoginRequiredMixin, DetailView):
 
 def training_home(request):
     """Render the training page of the Learning app."""
-    logger.info("Training home")  # pylint: disable=R1705
-    if request.user.is_authenticated:
+    logger.info("Training home")
+    if request.user.is_authenticated:  # pylint: disable=R1705
         try:
             current_user = User.objects.get(username=request.user)
             logger.debug(current_user)
