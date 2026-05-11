@@ -210,9 +210,7 @@ class RemoveTrainingView(LoginRequiredMixin, DeleteView):
 
     def form_valid(self, form):
         """Delete the training record."""
-        success_url = self.get_success_url()
-
-        return HttpResponseRedirect(success_url)
+        return super().form_valid(form)
 
 
 class AccountView(LoginRequiredMixin, TemplateView):
