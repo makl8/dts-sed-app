@@ -16,7 +16,6 @@ DISABLE_LINTERS:
 
 # DISABLE_ERRORS_LINTERS:
 
-PYTHON_BANDIT_CONFIG_FILE: "pyproject.toml"
 PYTHON_PYLINT_CONFIG_FILE: "pyproject.toml"
 # root-user-action=ignore recommended for containers, otherwise you get a warning
 PYTHON_PYLINT_PRE_COMMANDS:
