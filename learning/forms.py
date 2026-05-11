@@ -28,7 +28,7 @@ class AddTrainingModelForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         hide_condition = kwargs.pop("hide_fields", None)
-        super(AddTrainingModelForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if hide_condition:
             self.fields["user"].widget = HiddenInput()
 

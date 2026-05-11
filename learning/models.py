@@ -1,6 +1,6 @@
 from datetime import date, timedelta
 
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.core.validators import RegexValidator, ValidationError
 from django.db import models
 from django.utils.timezone import now
@@ -40,7 +40,7 @@ class Course(models.Model):
         ],
     )
 
-    class RenewalPeriodChoices(models.IntegerChoices):  # noqa: E301,D106
+    class RenewalPeriodChoices(models.IntegerChoices):  # noqa: E301,D106, pylint: disable=C0115
         TIER0 = 0, _("no renewal")
         TIER1 = 1, _("1 year")
         TIER3 = 3, _("3 years")
@@ -81,7 +81,7 @@ class Course(models.Model):
 class Training(models.Model):
     """Model representing a completed training."""
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="trainings")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="trainings")
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="trainings")
     date_added = models.DateField(auto_now_add=True)
     completion_date = models.DateField(

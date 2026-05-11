@@ -2,9 +2,9 @@ import json
 import logging
 from datetime import timedelta
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
 from django.db import transaction
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
@@ -17,6 +17,7 @@ from django.views.generic import DeleteView, DetailView, TemplateView
 from learning.forms import AddTrainingModelForm, ExtendTrainingModelForm
 from learning.models import Course, Training
 
+User = get_user_model()
 logger = logging.getLogger(__name__)
 
 
@@ -32,7 +33,7 @@ class CourseDetailView(LoginRequiredMixin, DetailView):
 
 def training_home(request):
     """Render the training page of the Learning app."""
-    logger.info("Training home")
+    logger.info("Training home")  # pylint: disable=R1705
     if request.user.is_authenticated:
         try:
             current_user = User.objects.get(username=request.user)
@@ -67,8 +68,8 @@ def add_training(request):
         # get the related User instance for the current user
         try:
             current_user = User.objects.get(username=request.user)
-        except User.DoesNotExist:
-            raise Http404("User not found.")
+        except User.DoesNotExist as exc:
+            raise Http404("User not found.") from exc
         post_data["user"] = current_user
         form = AddTrainingModelForm(post_data, hide_fields=True)
         if form.is_valid():
@@ -105,12 +106,12 @@ def extend_training(request, pk):
     # ownership check: only the owner can extend their training
     try:
         current_user = User.objects.get(username=request.user)
-    except User.DoesNotExist:
-        raise Http404("User not found.")
+    except User.DoesNotExist as exc:
+        raise Http404("User not found.") from exc
     try:
         training_instance = Training.objects.get(pk=pk)
-    except Training.DoesNotExist:
-        raise Http404("Training record does not exist.")
+    except Training.DoesNotExist as exc:
+        raise Http404("Training record does not exist.") from exc
     if training_instance.user != current_user:
         raise Http404("You do not have permission to extend this training.")
 
@@ -165,8 +166,8 @@ def bulk_remove_training(request):
     """Confirm or remove multiple training records owned by the current user."""
     try:
         current_user = User.objects.get(username=request.user)
-    except User.DoesNotExist:
-        raise Http404("User not found.")
+    except User.DoesNotExist as exc:
+        raise Http404("User not found.") from exc
 
     selected_training_ids = request.POST.getlist("selected_training_ids")
     selected_training_list = list(
