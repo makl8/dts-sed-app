@@ -24,7 +24,7 @@ PYTHON_PYLINT_PRE_COMMANDS:
       pip install --root-user-action=ignore \
       django==6.0.5 \
       pylint-django==2.7.0 \
-      django-allauth
+      django-allauth \
       django-allauth-ui
       export PYTHONPATH="$PWD:$PYTHONPATH"
     run_before_linters: true
