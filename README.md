@@ -1,7 +1,7 @@
 # Central Training Portal
 
 ![Django badge](https://img.shields.io/badge/django-092E20?logo=django&logoColor=white)
-[![Continuous Integration](/dts-sed-app/actions/workflows/ci.yaml/badge.svg?branch=main)](/dts-sed-app/actions/workflows/ci.yaml)
+[![Continuous Integration](https://github.com/makl8/dts-sed-app/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/makl8/dts-sed-app/actions/workflows/ci.yaml)
 
 ## Description
 Version: 0.0.0  <!-- x-release-please-version -->

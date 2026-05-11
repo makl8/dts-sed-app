@@ -19,7 +19,7 @@ DISABLE_ERRORS_LINTERS:
 
 PYTHON_PYLINT_CONFIG_FILE: "pyproject.toml"
 PYTHON_PYLINT_PRE_COMMANDS:
-  - command: pip install pylint-django
+  - command: pip install django==6.0.5 pylint-django==2.7.0
     run_before_linters: true
 
 PRINT_ALL_FILES: false
