@@ -3,7 +3,13 @@ from datetime import date
 import pytest
 from django.core.exceptions import ValidationError
 from django.forms.widgets import HiddenInput
-from learning.forms import AddTrainingModelForm, ExtendTrainingModelForm, LearningSignupForm, validate_name
+
+from learning.forms import (
+    AddTrainingModelForm,
+    ExtendTrainingModelForm,
+    LearningSignupForm,
+    validate_name,
+)
 
 
 @pytest.mark.django_db

@@ -90,10 +90,7 @@ exclude_dirs = [".venv", "build"]
 skips = ["B403"]  # blacklist_imports pickle
 
 [tool.bandit.assert_used]
-skips = [
-    "tests/*_test.py",
-    "tests/*test_*.py",
-]
+skips = [".*/tests/.*\\.py$"]
 
 [tool.djlint]
 profile="django"
