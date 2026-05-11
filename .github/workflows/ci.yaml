@@ -52,9 +52,11 @@ jobs:
           persist-credentials: false
 
       - name: MegaLinter
+        uses: oxsecurity/megalinter/flavors/python@v9
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: oxsecurity/megalinter/flavors/python@v9
+          MEGALINTER_ADDITIONAL_PYTHON_PACKAGES: pylint-django
+          DJANGO_SETTINGS_MODULE: learning.settings
         with:
           flake8_config_path: .flake8
           ruff_config_path: pyproject.toml
