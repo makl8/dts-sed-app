@@ -18,13 +18,14 @@ Including another URLconf
 from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import include, path
-from django.views.generic import TemplateView
+from django.views.generic import RedirectView, TemplateView
 from learning import views
 
 urlpatterns = [
     path("", TemplateView.as_view(template_name="home.html"), name="home"),
     path("health/", lambda r: HttpResponse("ok")),
     path("admin/", admin.site.urls),
+    path("accounts/", RedirectView.as_view(pattern_name="account", permanent=False)),
     path("accounts/email/", TemplateView.as_view(template_name="change_email.html"), name="change_email"),
     path("accounts/password/reset/", TemplateView.as_view(template_name="reset_password.html"), name="reset_password"),
     path("accounts/", include("allauth.urls")),
