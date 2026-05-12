@@ -61,9 +61,9 @@ pytest tests --cov
 The repository currently includes these main workflows:
 
 <!-- markdown-table-prettify-ignore-start -->
-| Workflow  | Purpose                                   |
-| --------- | ----------------------------------------- |
-| `ci.yaml` | Run tests, linting and validation checks  |
+| Workflow       | Purpose                                               |
+|----------------|-------------------------------------------------------|
+| `ci.yaml`      | Run tests, linting and validation checks              |
 | `release.yaml` | Create and update Release Please release PRs and tags |
 <!-- markdown-table-prettify-ignore-end -->
 
