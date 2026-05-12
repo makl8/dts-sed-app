@@ -1,19 +1,43 @@
+from unicodedata import category
+
 from allauth.account.forms import SignupForm
 from django import forms as dj_forms
-from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 from django.forms.widgets import HiddenInput
 from django.utils.translation import gettext_lazy as _
 from learning.models import Training
 
-name_validator = RegexValidator(
-    regex=r"^[\p{L}']+(?:[ -][\p{L}']+)*$",
-    message=_(
+
+def validate_name(value):
+    """Validate names without relying on unsupported Unicode regex escapes."""
+    error_message = _(
         "Enter a valid name. Letters, spaces, hyphens, and apostrophes only, up to 100 characters. "
         "Must have at least 2 characters and no consecutive spaces or hyphens."
-    ),
-    code="invalid_name",
-)
+    )
+
+    if not value or value[0] in {" ", "-"} or value[-1] in {" ", "-"}:
+        raise ValidationError(error_message, code="invalid_name")
+
+    has_letter = False
+    previous_char = ""
+    for char in value:
+        if char == "'":
+            previous_char = char
+            continue
+        if char in {" ", "-"}:
+            if previous_char in {" ", "-"}:
+                raise ValidationError(error_message, code="invalid_name")
+            previous_char = char
+            continue
+        if category(char).startswith("L"):
+            has_letter = True
+            previous_char = char
+            continue
+        raise ValidationError(error_message, code="invalid_name")
+
+    if not has_letter:
+        raise ValidationError(error_message, code="invalid_name")
 
 
 class HideFieldsMixin:
@@ -51,6 +75,19 @@ class ExtendTrainingModelForm(HideFieldsMixin, ModelForm):
 
     hideable_fields = ["training_expiry_date"]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["training_expiry_date"].required = False
+
+    def clean_training_expiry_date(self):
+        """Keep the current expiry date when the hidden field is omitted on submit."""
+        training_expiry_date = self.cleaned_data.get("training_expiry_date")
+        if training_expiry_date:
+            return training_expiry_date
+        if self.instance.pk:
+            return self.instance.training_expiry_date
+        return training_expiry_date
+
     class Meta:
         """Meta class for ExtendAccessModelForm."""
 
@@ -66,13 +103,13 @@ class LearningSignupForm(SignupForm):
         required=True,
         min_length=2,
         max_length=100,
-        validators=[name_validator],
+        validators=[validate_name],
     )
     last_name = dj_forms.CharField(
         required=True,
         min_length=2,
         max_length=100,
-        validators=[name_validator],
+        validators=[validate_name],
     )
 
     def custom_signup(self, request, user):

@@ -1,10 +1,35 @@
 from datetime import date, timedelta
+from unicodedata import category
 
 from django.conf import settings
 from django.core.validators import RegexValidator, ValidationError
 from django.db import models
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
+
+
+def validate_course_description(value):
+    """Validate course descriptions using Unicode character categories."""
+    if not 20 <= len(value) <= 4000:
+        raise ValidationError(
+            _(
+                "Enter a valid course description. Descriptions may include letters, "
+                "numbers, spaces and punctuation, and must be between 20 and 4000 characters."
+            ),
+            code="invalid_course_description",
+        )
+
+    for char in value:
+        char_category = category(char)
+        if char in "\n\r" or char_category == "Zs" or char_category[0] in {"L", "N", "P"}:
+            continue
+        raise ValidationError(
+            _(
+                "Enter a valid course description. Descriptions may include letters, "
+                "numbers, spaces and punctuation, and must be between 20 and 4000 characters."
+            ),
+            code="invalid_course_description",
+        )
 
 
 class Course(models.Model):
@@ -28,16 +53,7 @@ class Course(models.Model):
     course_description = models.TextField(
         _("Course description:"),
         max_length=4000,
-        validators=[
-            RegexValidator(
-                regex=r"^[\p{L}\p{N}\p{P}\p{Zs}\n\r]{20,4000}$",
-                message=_(
-                    "Enter a valid course description. Descriptions may include letters, "
-                    "numbers, spaces and punctuation, and must be between 20 and 4000 characters."
-                ),
-                code="invalid_course_description",
-            ),
-        ],
+        validators=[validate_course_description],
     )
 
     class RenewalPeriodChoices(models.IntegerChoices):  # noqa: E301,D106, pylint: disable=C0115

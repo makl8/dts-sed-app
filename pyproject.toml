@@ -1,5 +1,5 @@
 [project]
-name = "Customer Management Portal"
+name = "dts-sed-app"
 version = "0.0.0"  # x-release-please-version
 requires-python = ">= 3.14"
 dependencies = [
@@ -8,7 +8,7 @@ dependencies = [
     "django-allauth-ui==1.8.1",
     "django-widget-tweaks==1.5.1",
     "python-dotenv==1.2.2",
-    "slippers==0.7.0",
+    "slippers>=0.6",  # allauth-ui doesn't support v0.7.0
     "typeguard==2.13.3",  # this version is required by slippers v0.7.0
 #    "whitenoise==6.12.0",
 #    "gunicorn==25.3.0",
@@ -29,11 +29,15 @@ optional-dependencies.test = [
     "pytest-django==4.12.0",
 ]
 
-[pytest]
+[tool.setuptools.packages.find]
+include = ["learning"]
+
+[tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "learning.settings"
 python_files = [
     "test_*.py",
     "*_tests.py",
+    "tests.py",
 ]
 django_debug_mode = false
 addopts = "--reuse-db --durations=10"  # use reusable database for faster local test runs and show slow tests
@@ -64,7 +68,7 @@ force-exclude = """
 
 [tool.pylint.main]
 #fail-under = 8.0
-ignore-paths = "^learning/migrations/.*$"
+ignore-paths = "^learning/migrations/.*$, ^tests/.*$"
 load-plugins = ["pylint_django"]
 django-settings-module = "learning.settings"
 
@@ -85,14 +89,11 @@ max-parents = 13
 profile = "django"
 
 [tool.bandit]
-exclude_dirs = [".venv", "build"]
+exclude_dirs = [".venv", "tests"]
 skips = ["B403"]  # blacklist_imports pickle
 
 [tool.bandit.assert_used]
-skips = [
-    "*_test.py",
-    "*test_*.py",
-]
+skips = [".*/tests/.*\\.py$"]
 
 [tool.djlint]
 profile="django"
