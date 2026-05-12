@@ -97,6 +97,38 @@ DATABASES = {
     }
 }
 
+LOGGING = {
+    "version": 1,  # the dictConfig format version
+    "disable_existing_loggers": False,  # retain the default loggers
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+        "file": {
+            "class": "logging.FileHandler",
+            # use environment variable for log path if set, else default to BASE_DIR / 'general.log'
+            "filename": os.environ.get("DJANGO_LOG_FILE", str(BASE_DIR / "general.log")),
+            "formatter": "verbose",
+            "level": os.environ.get("DJANGO_LOG_LEVEL", "WARNING"),
+        },
+    },
+    "root": {
+        "handlers": ["console", "file"],
+        "level": os.environ.get("DJANGO_LOG_LEVEL", "WARNING"),
+    },
+    "formatters": {
+        "verbose": {
+            "format": "{name} {levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
+        },
+    },
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
