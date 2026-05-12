@@ -6,7 +6,7 @@
 ## Description
 Version: 0.0.0  <!-- x-release-please-version -->
 
-The Central Training Portal (CTP) is a Django application for managing and recording training information. \
+The Central Training Portal (CTP) is a Django application for managing and recording training information.
 
 ## How to create a virtual environment and install dependencies
 
