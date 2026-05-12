@@ -104,6 +104,21 @@ def test_learning_signup_form_first_name_rejects_invalid_value():
         form.fields["first_name"].clean("A1")
 
 
+def test_learning_signup_form_accepts_some_org_email():
+    form = LearningSignupForm()
+    form.cleaned_data = {"email": "person@some.org"}
+
+    assert form.clean_email() == "person@some.org"
+
+
+def test_learning_signup_form_rejects_non_some_org_email():
+    form = LearningSignupForm()
+    form.cleaned_data = {"email": "person@example.com"}
+
+    with pytest.raises(ValidationError):
+        form.clean_email()
+
+
 @pytest.mark.django_db
 def test_learning_signup_form_custom_signup_sets_names(django_user_model):
     form = LearningSignupForm()

@@ -112,6 +112,13 @@ class LearningSignupForm(SignupForm):
         validators=[validate_name],
     )
 
+    def clean_email(self):
+        """Restrict signup email addresses to the organisation domain."""
+        email = self.cleaned_data["email"].strip().lower()
+        if not email.endswith("@some.org"):
+            raise ValidationError(_("Enter an email address ending in @some.org."), code="invalid_domain")
+        return email
+
     def custom_signup(self, request, user):
         """Set the user's name from the form response and save it to their db record."""
         user.first_name = self.cleaned_data["first_name"]
