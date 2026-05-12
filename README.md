@@ -6,19 +6,31 @@
 ## Description
 Version: 0.0.0  <!-- x-release-please-version -->
 
-The Central Training Portal (CTP) is a Django application for managing and recording training information.
+The Central Training Portal (CTP) is a Django application for recording and maintaining staff training records.
+
+It allows authenticated users to add, review, extend and remove completed training against a central course catalogue. The application also tracks renewal periods and expiry dates so mandatory and recurring training can be monitored in one place.
 
 ## How to create a virtual environment and install dependencies
 
 Go to the application's root directory, create a virtual environment and activate it:
 ```shell
 python -m venv .venv
+```
+
+On PowerShell:
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+On bash:
+```shell
 source .venv/bin/activate
 ```
-Install Django and other dependencies in the virtual environment:
+
+Install the application and development dependencies from `pyproject.toml`:
 ```shell
 pip install --upgrade pip
-pip install -r requirements/prod.txt
+pip install -e ".[dev,test]"
 ```
 
 ## Testing and Quality
@@ -34,15 +46,10 @@ Key tools include:
 
 ### How to run the tests
 
-You need `pytest` installed in the `.venv` virtual environment:
+You need the test dependencies installed in the `.venv` virtual environment:
 ```shell
-pip install pytest pytest-cov pytest-django
+pip install -e ".[test]"
 ```
-unless you have installed the `dev` alongside `prod` dependencies like this:
-```shell
-pip install -r requirements/dev.txt
-```
-in which case you already have it.
 
 Go to the application's root directory and run:
 ```shell
@@ -57,7 +64,16 @@ The repository currently includes these main workflows:
 | Workflow  | Purpose                                   |
 | --------- | ----------------------------------------- |
 | `ci.yaml` | Run tests, linting and validation checks  |
+| `release.yaml` | Create and update Release Please release PRs and tags |
 <!-- markdown-table-prettify-ignore-end -->
+
+## Releases
+
+Releases are managed by Release Please from commits merged into `main`. Use Conventional Commits where `fix:` creates a patch release, `feat:` creates a minor release, and `feat!:` or any commit with a `BREAKING CHANGE:` creates a major release.
+
+When qualifying commits are merged, Release Please opens or updates a release pull request. Merging that release pull request creates the GitHub release, updates the tracked version files, and publishes a SemVer tag in the format `v0.0.1`.
+
+The release workflow is defined in `.github/workflows/release.yaml`, and the release rules are configured in `release-please-config.json` and `.release-please-manifest.json`.
 
 ## How to run the application locally
 

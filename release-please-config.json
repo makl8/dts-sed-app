@@ -1,6 +1,8 @@
 {
     "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
     "pull-request-title-pattern": "chore: release ${version}",
+    "include-v-in-tag": true,
+    "initial-version": "0.0.1",
     "changelog-sections": [
         {
             "type": "feat",
@@ -62,7 +64,6 @@
         ".": {
             "changelog-path": "CHANGELOG.md",
             "release-type": "simple",
-            "tag-name": "v${version}",
             "extra-files": [
                 "README.md",
                 "pyproject.toml",
