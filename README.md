@@ -96,6 +96,12 @@ DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,[::1]
 DJANGO_LOG_LEVEL=DEBUG
 ```
 
+Static files are served through WhiteNoise. For local development with `DEBUG=true`, Django can serve static assets during `runserver`. If you are testing production-style settings with `DEBUG=false`, collect the static files first:
+
+```shell
+python manage.py collectstatic
+```
+
 Go to the application's root directory, apply migrations and start the development server:
 
 ```bash
@@ -107,6 +113,18 @@ Application is then available at
 `http://127.0.0.1:8000/`
 
 The default local database is SQLite at `trainingdb.sqlite3` in the application root.
+
+## Static files
+
+The project uses Django's staticfiles app together with WhiteNoise to serve application and package assets, including the allauth UI styles. Static files are collected into `staticfiles/`, and the current storage backend is configured for compressed static assets.
+
+For deployments, install the application dependencies and run:
+
+```shell
+python manage.py collectstatic
+```
+
+before starting the application server.
 
 ## License
 
