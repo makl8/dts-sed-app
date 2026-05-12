@@ -27,9 +27,14 @@ On bash:
 source .venv/bin/activate
 ```
 
-Install the application and development dependencies from `pyproject.toml`:
+Install the application dependencies from `pyproject.toml`:
 ```shell
 pip install --upgrade pip
+pip install .
+```
+
+If you are contributing to the project, install the development and test extras as well:
+```shell
 pip install -e ".[dev,test]"
 ```
 
