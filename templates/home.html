@@ -10,7 +10,11 @@
         {% block content %}
           <h2>Welcome to the Training Portal</h2>
           {% if user.is_authenticated %}
-            <p>You can use this application to add, view, update and remove your <a href="{% url 'training' %}">training record</a>.</p>
+            {% if user.is_staff and user.is_superuser %}
+            <p>You are signed in as an administrator. You can manage all application data through the <a href="{% url 'admin:index' %}">Django admin site</a>, including courses and all user training records.</p>
+            {% else %}
+            <p>You can use this application to add, view, update and remove your own <a href="{% url 'training' %}">training records</a>.</p>
+            {% endif %}
           {% else %}
           <p style="font-size:20px;">
             Please <a href="{% url 'account_signup' %}">register</a> or <a href="{% url 'account_login' %}">sign in</a> to your account.

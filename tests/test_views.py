@@ -6,6 +6,36 @@ from learning.models import Training
 
 
 @pytest.mark.django_db
+def test_home_page_regular_user_message(client, user):
+    client.force_login(user)
+
+    response = client.get(reverse("home"))
+
+    assert response.status_code == 200
+    assert "your own" in response.content.decode()
+    assert "signed in as an administrator" not in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_home_page_admin_user_message(client, django_user_model, password):
+    admin_user = django_user_model.objects.create_user(
+        username="admin-user",
+        email="admin@example.com",
+        password=password,
+        is_staff=True,
+        is_superuser=True,
+    )
+    client.force_login(admin_user)
+
+    response = client.get(reverse("home"))
+
+    assert response.status_code == 200
+    assert "administrator" in response.content.decode()
+    assert reverse("admin:index") in response.content.decode()
+    assert "manage all application data" in response.content.decode()
+
+
+@pytest.mark.django_db
 def test_training_home_anonymous_renders_page(client):
     response = client.get(reverse("training"))
 

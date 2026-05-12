@@ -1,17 +1,17 @@
 [project]
 name = "dts-sed-app"
 version = "0.0.0"  # x-release-please-version
-requires-python = ">= 3.14"
+requires-python = ">= 3.10"
 dependencies = [
-    "Django==6.0.5",
+    "Django==5.2.14",  # latest version supported by python 3.10
+#    "Django==6.0.5",
     "django-allauth==65.16.1",
     "django-allauth-ui==1.8.1",
     "django-widget-tweaks==1.5.1",
+    "slippers>=0.6",  # allauth-ui v1.8.1 cannot use v7
+    "typeguard==2.13.3",  # slippers does not support newer versions
+    "whitenoise==6.12.0",
     "python-dotenv==1.2.2",
-    "slippers>=0.6",  # allauth-ui doesn't support v0.7.0
-    "typeguard==2.13.3",  # this version is required by slippers v0.7.0
-#    "whitenoise==6.12.0",
-#    "gunicorn==25.3.0",
 ]
 optional-dependencies.dev = [
     "black>=26.3",
