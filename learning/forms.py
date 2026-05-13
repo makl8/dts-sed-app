@@ -12,7 +12,7 @@ from learning.models import Training
 def validate_name(value):
     """Validate names without relying on unsupported Unicode regex escapes."""
     error_message = _(
-        "Enter a valid name. Letters, spaces, hyphens, and apostrophes only, up to 100 characters. "
+        "Enter a valid name. Letters, spaces, hyphens, and apostrophes only, up to 150 characters. "
         "Must have at least 2 characters and no consecutive spaces or hyphens."
     )
 
@@ -102,13 +102,13 @@ class LearningSignupForm(SignupForm):
     first_name = dj_forms.CharField(
         required=True,
         min_length=2,
-        max_length=100,
+        max_length=150,
         validators=[validate_name],
     )
     last_name = dj_forms.CharField(
         required=True,
         min_length=2,
-        max_length=100,
+        max_length=150,
         validators=[validate_name],
     )
 

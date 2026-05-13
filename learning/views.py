@@ -13,7 +13,7 @@ from django.utils.decorators import method_decorator
 from django.utils.timezone import now
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.decorators.http import require_POST
-from django.views.generic import DeleteView, DetailView, TemplateView
+from django.views.generic import DeleteView, DetailView, TemplateView, View
 from learning.forms import AddTrainingModelForm, ExtendTrainingModelForm
 from learning.models import Course, Training
 
@@ -21,9 +21,17 @@ User = get_user_model()
 logger = logging.getLogger(__name__)
 
 
+class LoggingMixin(View):
+    """Mixin for CBV logging functionality."""
+
+    def dispatch(self, request, *args, **kwargs):
+        logger.info("%s accessed", self.__class__.__name__)
+        return super().dispatch(request, *args, **kwargs)
+
+
 # xframe_options_sameorigin required to allow embedding
 @method_decorator(xframe_options_sameorigin, name="dispatch")
-class CourseDetailView(LoginRequiredMixin, DetailView):
+class CourseDetailView(LoggingMixin, LoginRequiredMixin, DetailView):
     """Render the Course info page."""
 
     model = Course
@@ -37,7 +45,6 @@ def training_home(request):
     if request.user.is_authenticated:  # pylint: disable=R1705
         try:
             current_user = User.objects.get(username=request.user)
-            logger.debug(current_user)
         except User.DoesNotExist:
             current_user = None
         user_training_list = Training.objects.filter(user=current_user).select_related("course") if current_user else []
@@ -164,6 +171,7 @@ def extend_training(request, pk):
 @require_POST
 def bulk_remove_training(request):
     """Confirm or remove multiple training records owned by the current user."""
+    logger.info("Remove training (bulk)")
     try:
         current_user = User.objects.get(username=request.user)
     except User.DoesNotExist as exc:
@@ -192,7 +200,7 @@ def bulk_remove_training(request):
     return render(request, "learning/remove_training.html", context)
 
 
-class RemoveTrainingView(LoginRequiredMixin, DeleteView):
+class RemoveTrainingView(LoggingMixin, LoginRequiredMixin, DeleteView):
     """Render the Remove training page."""
 
     model = Training
@@ -209,7 +217,7 @@ class RemoveTrainingView(LoginRequiredMixin, DeleteView):
         return Training.objects.filter(user=current_user)
 
 
-class AccountView(LoginRequiredMixin, TemplateView):
+class AccountView(LoggingMixin, LoginRequiredMixin, TemplateView):
     """Render the account page."""
 
     template_name = "learning/account.html"

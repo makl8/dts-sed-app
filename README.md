@@ -58,7 +58,7 @@ pip install -e ".[test]"
 
 Go to the application's root directory and run:
 ```shell
-pytest tests --cov
+pytest tests
 ```
 
 ### GitHub Actions workflows
@@ -75,11 +75,11 @@ The repository currently includes these main workflows:
 
 ## Releases
 
-Releases are managed by Release Please from commits merged into `main`. Use Conventional Commits where `fix:` creates a patch release, `feat:` creates a minor release, and `feat!:` or any commit with a `BREAKING CHANGE:` creates a major release.
+Releases are managed by Release Please from commits merged into `main`. Use Conventional Commits where `fix:` creates a patch release, `feat:` creates a minor release and `feat!:` or any commit with a `BREAKING CHANGE:` creates a major release.
 
-When qualifying commits are merged, Release Please opens or updates a release pull request. Merging that release pull request creates the GitHub release, updates the tracked version files, and publishes a SemVer tag in the format `v0.0.1`.
+When qualifying commits are merged, Release Please opens or updates a release pull request. Merging that release pull request creates the GitHub release, updates the tracked version files and publishes a SemVer tag in the format `v0.0.1`.
 
-The release workflow is defined in `.github/workflows/release.yaml`, and the release rules are configured in `release-please-config.json` and `.release-please-manifest.json`.
+The release workflow is defined in `.github/workflows/release.yaml`, while the release rules are configured in `release-please-config.json` and `.release-please-manifest.json`.
 
 ## How to run the application locally
 
@@ -88,12 +88,12 @@ Create a `.env` file in the repository root with at least the Django secret key 
 
 ```env
 SECRET_KEY=<secret_key_value>
-DEBUG=true
 ```
 You can also set:
 
 ```env
 DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,[::1]
+DEBUG=true
 DJANGO_LOG_LEVEL=DEBUG
 ```
 
@@ -114,18 +114,6 @@ Application is then available at
 `http://127.0.0.1:8000/`
 
 The default local database is SQLite at `trainingdb.sqlite3` in the application root.
-
-## Static files
-
-The project uses Django's staticfiles app together with WhiteNoise to serve application and package assets, including the allauth UI styles. Static files are collected into `staticfiles/`, and the current storage backend is configured for compressed static assets.
-
-For deployments, install the application dependencies and run:
-
-```shell
-python manage.py collectstatic
-```
-
-before starting the application server.
 
 ## License
 
