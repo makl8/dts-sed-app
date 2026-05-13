@@ -69,7 +69,6 @@ The repository currently includes these main workflows:
 | Workflow         | Purpose                                               |
 |------------------|-------------------------------------------------------|
 | `ci.yaml`        | Run tests, linting and validation checks              |
-| `pip-audit.yaml` | Run a manual dependency vulnerability audit           |
 | `release.yaml`   | Create and update Release Please release PRs and tags |
 <!-- markdown-table-prettify-ignore-end -->
 

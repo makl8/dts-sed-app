@@ -141,7 +141,6 @@ def extend_training(request, pk):
             training_instance.training_expiry_date = calculated_training_expiry_date
             training_instance.save()
             success = True
-            # calculated_training_expiry_date = training_instance.training_expiry_date
             confirmation_message = f"Training expiry date updated successfully to {calculated_training_expiry_date}."
     else:
         form = ExtendTrainingModelForm(
