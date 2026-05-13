@@ -8,7 +8,7 @@ dependencies = [
     "django-allauth==65.16.1",
     "django-allauth-ui==1.8.1",
     "django-widget-tweaks==1.5.1",
-    "slippers>=0.6",  # allauth-ui v1.8.1 cannot use v7
+    "slippers==0.6.3",  # allauth-ui v1.8.1 cannot use v7
     "typeguard==2.13.3",  # slippers does not support newer versions
     "whitenoise==6.12.0",
     "python-dotenv==1.2.2",
@@ -20,13 +20,12 @@ optional-dependencies.dev = [
     "isort>=8.0",
     "yamllint>=1.38",
     "yamlfix>=1.19",
-    "pre-commit>=4.6",
     "pylint>=4.0",
 ]
 optional-dependencies.test = [
     "pytest>=9.0",
     "pytest-cov>=7.1",
-    "pytest-django==4.12.0",
+    "pytest-django>=4.12",
 ]
 
 [tool.setuptools.packages.find]
@@ -104,13 +103,13 @@ line-length = 120
 
 [tool.ruff.lint]
 select = [
-  "D",    # https://beta.ruff.rs/docs/rules/#pydocstyle-d
-  "E",    # https://beta.ruff.rs/docs/rules/#error-e
-  "F",    # https://beta.ruff.rs/docs/rules/#pyflakes-f
-  "I",    # https://beta.ruff.rs/docs/rules/#isort-i
-  "N",    # https://beta.ruff.rs/docs/rules/#pep8-naming-n
+  "D",    # https://docs.astral.sh/ruff/rules/#pydocstyle-d
+  "E",    # https://docs.astral.sh/ruff/rules/#error-e
+  "F",    # https://docs.astral.sh/ruff/rules/#pyflakes-f
+  "I",    # https://docs.astral.sh/ruff/rules/#isort-i
+  "N",    # https://docs.astral.sh/ruff/rules/#pep8-naming-n
   "S",    # https://docs.astral.sh/ruff/rules/#flake8-bandit-s
-  "W",    # https://beta.ruff.rs/docs/rules/#warning-w
+  "W",    # https://docs.astral.sh/ruff/rules/#warning-w
 ]
 ignore = [
   "D100",     # Missing docstring in public module
@@ -124,22 +123,13 @@ ignore = [
   "E402",     # Module level import not at top of file
 ]
 "main.py" = [
-#  "D103",     # Missing docstring in public function
   "E402",     # Module level import not at top of file
 ]
-#"views.py" = [
-#  "D103",     # Missing docstring in public function
-#]
 "tests/*" = [
   "D103",     # Missing docstring in public function
   "S101",     # Use of `assert` detected
 
 ]
-#"models.py" = [
-#  "D102",     # Missing docstring in public method
-#  "D105",     # Missing docstring in magic method
-#]
-"migrations*/" = ["ALL"]
 "migrations/*" = ["ALL"]
 
 [tool.ruff.lint.pydocstyle]
