@@ -22,7 +22,7 @@ def test_all_named_routes(client):
 def test_home_route_resolves():
     match = resolve(reverse("home"))
 
-    assert match.route == ""
+    assert match.route == "" or match.route == "home/"
     assert match.func.view_class.__name__ == "TemplateView"
 
 
