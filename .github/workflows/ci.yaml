@@ -19,6 +19,7 @@ jobs:
 
   pytest:
     name: pytest
+    if: github.head_ref != 'release-please--branches--main'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -51,6 +52,7 @@ jobs:
 
   megalinter:
     name: MegaLinter
+    if: github.head_ref != 'release-please--branches--main'
     runs-on: ubuntu-latest
 
     steps:

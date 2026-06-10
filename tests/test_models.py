@@ -46,6 +46,17 @@ def test_validate_course_description_accepts_punctuation_and_newlines():
 
 
 @pytest.mark.django_db
+def test_validate_course_description_rejects_punctuation_only():
+    """Course description must contain more than punctuation and spaces."""
+    course = Course(
+        course_name="Invalid description, only punctuation.",
+        course_description="..., --- ???",
+    )
+    with pytest.raises(ValidationError, match="Enter a valid course description"):
+        course.full_clean()
+
+
+@pytest.mark.django_db
 def test_training_save_calculates_expiry_from_course_renewal(user, recurring_course):
     training = Training.objects.create(
         user=user,

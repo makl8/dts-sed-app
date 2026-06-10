@@ -84,7 +84,7 @@ class Course(models.Model):
         if self.course_description:
             self.course_description = self.course_description.strip()
         if self.date_added and self.date_added > now().date():
-            raise ValidationError(_("Date added cannot be in the future."))
+            raise ValidationError({"date_added": _("Date added cannot be in the future.")})
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -133,9 +133,9 @@ class Training(models.Model):
     def clean(self):
         """Raise validation error to disallow future dates and unrealistically old dates."""
         if self.completion_date > now().date():
-            raise ValidationError(_("Completion date cannot be in the future."))
+            raise ValidationError({"completion_date": _("Completion date cannot be in the future.")})
         if self.completion_date < date(2000, 1, 1):
-            raise ValidationError(_("Completion date is unrealistically old."))
+            raise ValidationError({"completion_date": _("Completion date is unrealistically old.")})
 
     def save(self, *args, **kwargs):
         """Override save method to set training expiry date and enforce model validation."""
@@ -145,4 +145,4 @@ class Training(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):  # noqa: D105
-        return self.user.username + " : " + self.course.course_name
+        return f"{self.user.username} : {self.course.course_name}"
