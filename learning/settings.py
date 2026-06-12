@@ -38,6 +38,7 @@ DEBUG = os.environ.get("DEBUG", "0").lower() in ("1", "true", "yes", "on")
 TESTING = "pytest" in sys.modules
 SECURE_SSL_REDIRECT = not DEBUG and not TESTING
 SESSION_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_HTTPONLY = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_HSTS_SECONDS = 3600 if not DEBUG else 0

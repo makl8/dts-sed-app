@@ -132,6 +132,8 @@ class Training(models.Model):
 
     def clean(self):
         """Raise validation error to disallow future dates and unrealistically old dates."""
+        if self.completion_date is None:
+            return
         if self.completion_date > now().date():
             raise ValidationError({"completion_date": _("Completion date cannot be in the future.")})
         if self.completion_date < date(2000, 1, 1):
