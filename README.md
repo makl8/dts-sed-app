@@ -4,7 +4,7 @@
 [![Continuous Integration](https://github.com/makl8/dts-sed-app/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/makl8/dts-sed-app/actions/workflows/ci.yaml)
 
 ## Description
-Version: 0.1.0  <!-- x-release-please-version -->
+Version: 0.1.1  <!-- x-release-please-version -->
 
 The Central Training Portal (CTP) is a Django application for recording and maintaining staff training records.
 
