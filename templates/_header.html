@@ -7,37 +7,37 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{% url 'about' %}">About</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ user.username }}
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownUser">
+                <li><a class="dropdown-item" href="{% url 'account' %}">My account</a></li>
+                <li><a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{% url 'about' %}">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{% url 'account_signup' %}">SignUp</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'account_login' %}">Login</a>
+            </li>
+            {% endif %}
+          </ul>
         </div>
       </div>
-      <ul class="navbar-nav justify-content-end">
-        {% if user.is_authenticated %}
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'about' %}">About</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            {{ user.username }}
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdownUser">
-            <li><a class="dropdown-item" href="{% url 'account' %}">My account</a></li>
-            <li><a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
-        </li>
-        {% else %}
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'about' %}">About</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'account_signup' %}">SignUp</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="{% url 'account_login' %}">Login</a>
-        </li>
-        {% endif %}
-      </ul>
     </nav>
 
     <header class="text-black text-center p-3 mb-2" style="background-color: #FCFCED;">
