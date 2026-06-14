@@ -8,7 +8,6 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.http import Http404, HttpResponse
 from django.urls import reverse
-
 from learning import forms, models, views
 from learning.forms import ExtendTrainingModelForm, LearningSignupForm
 from learning.models import Training
