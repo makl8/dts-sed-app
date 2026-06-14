@@ -5,8 +5,8 @@ from types import SimpleNamespace
 import pytest
 from django import forms as django_forms
 from django.contrib.auth.password_validation import validate_password
-from django.http import Http404, HttpResponse
 from django.core.exceptions import ValidationError
+from django.http import Http404, HttpResponse
 from django.urls import reverse
 
 from learning import forms, models, views
@@ -440,9 +440,7 @@ def test_remove_training_returns_404_when_authenticated_user_record_no_longer_ex
 
 @pytest.mark.owasp_a5
 @pytest.mark.django_db
-def test_bulk_remove_returns_404_when_authenticated_user_record_no_longer_exists(
-    rf, user, user_training, monkeypatch
-):
+def test_bulk_remove_returns_404_when_authenticated_user_record_no_longer_exists(rf, user, user_training, monkeypatch):
     request = rf.post(reverse("bulk_remove_training"), {"selected_training_ids": [user_training.pk]})
     request.user = user
 
