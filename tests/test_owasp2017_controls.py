@@ -11,6 +11,11 @@ from django.urls import reverse
 from learning import forms, models, views
 from learning.forms import ExtendTrainingModelForm, LearningSignupForm
 from learning.models import Training
+from tests.helpers import (
+    assert_bulk_remove_only_deletes_owned_records,
+    assert_non_owner_cannot_extend_training,
+    assert_view_raises_user_not_found_http404,
+)
 
 
 @pytest.mark.owasp_a1
@@ -318,11 +323,7 @@ def test_add_training_returns_404_when_authenticated_user_record_no_longer_exist
 @pytest.mark.owasp_a5
 @pytest.mark.django_db
 def test_non_owner_cannot_extend_another_users_training(client, other_user, user_training):
-    client.force_login(other_user)
-
-    response = client.get(reverse("extend_training", args=[user_training.pk]))
-
-    assert response.status_code == 404
+    assert_non_owner_cannot_extend_training(client, other_user, user_training)
 
 
 @pytest.mark.owasp_a5
@@ -330,16 +331,15 @@ def test_non_owner_cannot_extend_another_users_training(client, other_user, user
 def test_extend_training_returns_404_when_authenticated_user_record_no_longer_exists(
     rf, user, user_training, monkeypatch
 ):
-    request = rf.get(reverse("extend_training", args=[user_training.pk]))
-    request.user = user
-
-    def raise_user_not_found(*args, **kwargs):
-        raise views.User.DoesNotExist()
-
-    monkeypatch.setattr(views.User.objects, "get", raise_user_not_found)
-
-    with pytest.raises(Http404):
-        views.extend_training.__wrapped__(request, user_training.pk)
+    assert_view_raises_user_not_found_http404(
+        rf,
+        user,
+        reverse("extend_training", args=[user_training.pk]),
+        monkeypatch,
+        "get",
+        views.extend_training,
+        user_training.pk,
+    )
 
 
 @pytest.mark.owasp_a5
@@ -423,16 +423,15 @@ def test_non_owner_cannot_delete_another_users_training(client, other_user, user
 def test_remove_training_returns_404_when_authenticated_user_record_no_longer_exists(
     rf, user, user_training, monkeypatch
 ):
-    request = rf.get(reverse("remove_training", args=[user_training.pk]))
-    request.user = user
-
-    def raise_user_not_found(*args, **kwargs):
-        raise views.User.DoesNotExist()
-
-    monkeypatch.setattr(views.User.objects, "get", raise_user_not_found)
-
-    with pytest.raises(Http404):
-        views.RemoveTrainingView.as_view()(request, pk=user_training.pk)
+    assert_view_raises_user_not_found_http404(
+        rf,
+        user,
+        reverse("remove_training", args=[user_training.pk]),
+        monkeypatch,
+        "get",
+        views.RemoveTrainingView.as_view(),
+        pk=user_training.pk,
+    )
 
     assert Training.objects.filter(pk=user_training.pk).exists()
 
@@ -503,20 +502,7 @@ def test_bulk_remove_confirmation_only_lists_owned_records(client, user, user_tr
 @pytest.mark.owasp_a5
 @pytest.mark.django_db
 def test_bulk_remove_only_deletes_owned_training_records(client, user, user_training, other_training):
-    client.force_login(user)
-
-    response = client.post(
-        reverse("bulk_remove_training"),
-        {
-            "selected_training_ids": [user_training.pk, other_training.pk],
-            "confirm_removal": "1",
-        },
-    )
-
-    assert response.status_code == 302
-    assert response.url == reverse("training")
-    assert not Training.objects.filter(pk=user_training.pk).exists()
-    assert Training.objects.filter(pk=other_training.pk).exists()
+    assert_bulk_remove_only_deletes_owned_records(client, user, user_training, other_training)
 
 
 @pytest.mark.owasp_a5
