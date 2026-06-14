@@ -1,0 +1,135 @@
+---
+name: OWASP ZAP Scan
+run-name: ${{ github.workflow }} - ${{ github.actor }} scanning target
+
+on:  # yamllint disable-line rule:truthy
+  workflow_dispatch:
+
+concurrency:
+  group: zap-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  zap-baseline:
+    name: Run ZAP baseline scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      TARGET_URL: ${{ secrets.ZAP_TARGET_URL }}
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v6
+
+      - name: Resolve scan target
+        id: target
+        run: |
+          if [ -z "${TARGET_URL}" ]; then
+            echo "Set repository secret ZAP_TARGET_URL before running this workflow." >&2
+            exit 1
+          fi
+          echo "target_url=${TARGET_URL}" >> "${GITHUB_OUTPUT}"
+
+      - name: Run OWASP ZAP baseline scan
+        run: |
+          docker run --rm \
+            -v "${GITHUB_WORKSPACE}:/zap/wrk/:rw" \
+            -t ghcr.io/zaproxy/zaproxy:stable \
+            zap-baseline.py \
+            -t "${{ steps.target.outputs.target_url }}" \
+            -J zap-report.json \
+            -r zap-report.html \
+            -w zap-report.md \
+            -a \
+            -j \
+            -m 5 || true
+
+      - name: Summarize ZAP findings
+        id: summarize
+        if: always()
+        env:
+          TARGET_URL: ${{ steps.target.outputs.target_url }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import pathlib
+          import sys
+
+          report_path = pathlib.Path("zap-report.json")
+          if not report_path.exists():
+              print("ZAP report not found: zap-report.json", file=sys.stderr)
+              sys.exit(1)
+
+          report = json.loads(report_path.read_text(encoding="utf-8"))
+          findings = []
+          total_alerts = 0
+
+          for site in report.get("site", []):
+              for alert in site.get("alerts", []):
+                  total_alerts += 1
+                  try:
+                      risk_code = int(alert.get("riskcode", -1))
+                  except (TypeError, ValueError):
+                      continue
+
+                  if risk_code >= 2:
+                      findings.append(
+                          {
+                              "risk": alert.get("riskdesc", "unknown risk"),
+                              "name": alert.get("alert", "Unnamed alert"),
+                              "instances": len(alert.get("instances", [])),
+                          }
+                      )
+
+          with pathlib.Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as output_file:
+              output_file.write(f"medium_high_count={len(findings)}\n")
+              output_file.write(f"total_alerts={total_alerts}\n")
+
+          summary_lines = [
+              "## OWASP ZAP Baseline Summary",
+              "",
+              f"- Total alerts reported: {total_alerts}",
+              f"- Medium/high alerts: {len(findings)}",
+              "",
+          ]
+
+          if findings:
+              summary_lines.append("### Medium/High findings")
+              summary_lines.append("")
+              for finding in findings:
+                  summary_lines.append(
+                      f"- {finding['risk']}: {finding['name']} ({finding['instances']} instance(s))"
+                  )
+          else:
+              summary_lines.append("No medium or high ZAP alerts found.")
+
+          pathlib.Path(os.environ["GITHUB_STEP_SUMMARY"]).write_text(
+              "\n".join(summary_lines) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Fail on medium or high alerts
+        if: always()
+        env:
+          MEDIUM_HIGH_COUNT: ${{ steps.summarize.outputs.medium_high_count }}
+        run: |
+          if [ "${MEDIUM_HIGH_COUNT:-0}" -gt 0 ]; then
+            echo "Medium/high ZAP alerts found. See job summary for details." >&2
+            exit 1
+          fi
+
+      - name: Upload ZAP reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: zap-baseline-report
+          path: |
+            zap-report.html
+            zap-report.json
+            zap-report.md
+          if-no-files-found: error

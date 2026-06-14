@@ -39,7 +39,12 @@ python_files = [
     "tests.py",
 ]
 django_debug_mode = false
-addopts = "--reuse-db --durations=10"  # use reusable database for faster local test runs and show slow tests
+addopts = "--reuse-db --durations=10 --strict-markers"  # use reusable database for faster local test runs, show slow tests and get unregistered markers to fail the build
+markers = [
+    "owasp_a1: OWASP Top 10 2017 - Injection",
+    "owasp_a2: OWASP Top 10 2017 - Broken Authentication",
+    "owasp_a5: OWASP Top 10 2017 - Broken Access Control",
+]
 
 [tool.coverage.run]
 branch = true

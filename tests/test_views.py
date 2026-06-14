@@ -3,6 +3,11 @@ from datetime import date, timedelta
 import pytest
 from django.urls import reverse
 from learning.models import Training
+from tests.helpers import (
+    assert_bulk_remove_only_deletes_owned_records,
+    assert_extend_training_updates_completion_and_expiry,
+    assert_non_owner_cannot_extend_training,
+)
 
 
 @pytest.mark.django_db
@@ -145,11 +150,7 @@ def test_extend_training_requires_login(client, user_training):
 
 @pytest.mark.django_db
 def test_extend_training_denies_non_owner(client, other_user, user_training):
-    client.force_login(other_user)
-
-    response = client.get(reverse("extend_training", args=[user_training.pk]))
-
-    assert response.status_code == 404
+    assert_non_owner_cannot_extend_training(client, other_user, user_training)
 
 
 @pytest.mark.django_db
@@ -168,18 +169,12 @@ def test_extend_training_get_shows_existing_training_details(client, user, user_
 
 @pytest.mark.django_db
 def test_extend_training_post_updates_completion_and_expiry(client, user, user_training):
-    client.force_login(user)
     new_completion_date = date(2025, 3, 1)
 
-    response = client.post(
-        reverse("extend_training", args=[user_training.pk]),
-        {
-            "completion_date": new_completion_date.isoformat(),
-            "training_expiry_date": "",
-        },
+    response = assert_extend_training_updates_completion_and_expiry(
+        client, user, user_training, new_completion_date, ""
     )
 
-    user_training.refresh_from_db()
     assert response.status_code == 200
     assert response.context["success"] is True
     assert user_training.completion_date == new_completion_date
@@ -258,20 +253,7 @@ def test_bulk_remove_training_confirmation_shows_only_owned_selected_records(
 
 @pytest.mark.django_db
 def test_bulk_remove_training_confirm_deletes_owned_selected_records(client, user, user_training, other_training):
-    client.force_login(user)
-
-    response = client.post(
-        reverse("bulk_remove_training"),
-        {
-            "selected_training_ids": [user_training.pk, other_training.pk],
-            "confirm_removal": "1",
-        },
-    )
-
-    assert response.status_code == 302
-    assert response.url == reverse("training")
-    assert not Training.objects.filter(pk=user_training.pk).exists()
-    assert Training.objects.filter(pk=other_training.pk).exists()
+    assert_bulk_remove_only_deletes_owned_records(client, user, user_training, other_training)
 
 
 @pytest.mark.django_db

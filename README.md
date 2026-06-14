@@ -8,7 +8,13 @@ Version: 0.1.0  <!-- x-release-please-version -->
 
 The Central Training Portal (CTP) is a Django application for recording and maintaining staff training records.
 
-It allows authenticated users to add, review, extend and remove completed training against a central course catalogue. The application also tracks renewal periods and expiry dates so mandatory and recurring training can be monitored in one place.
+It allows authenticated users to add, review, renew and remove completed training against a central course catalogue. The application tracks renewal periods and expiry dates so mandatory, recurring and one-off training can be monitored in one place.
+
+## Authentication and security model
+
+- Authentication is handled by `django-allauth`
+- Login is configured to use email addresses only
+- The test suite includes OWASP-focused tests for A1 Injection, A2 Broken Authentication and A5 Broken Access Control
 
 ## How to create a virtual environment and install dependencies
 
@@ -38,6 +44,49 @@ If you are contributing to the project, install the development and test extras 
 pip install -e ".[dev,test]"
 ```
 
+## How to run the application locally
+
+Local development uses `learning.settings` by default.
+
+Create a `.env` file in the repository root with at least a Django secret key:
+
+```env
+SECRET_KEY=<secret_key_value>
+```
+
+Common optional settings are:
+
+```env
+DEBUG=True
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,[::1]
+DJANGO_LOG_LEVEL=DEBUG
+DJANGO_LOG_FILE=general.log
+DB_NAME=trainingdb.sqlite3
+```
+
+Notes:
+
+- `DEBUG=True` is suitable for local development only
+- `DB_NAME` changes the SQLite file name under the repository root
+- When `DEBUG=false`, secure-cookie and HTTPS settings are enabled
+
+Apply migrations and start the development server:
+
+```bash
+python manage.py migrate
+python manage.py runserver
+```
+
+The application is then available at `http://127.0.0.1:8000/`.
+
+The default local database is SQLite and uses `trainingdb.sqlite3` unless `DB_NAME` is set in `.env`.
+
+Static files are served through WhiteNoise. If you want to emulate production-style static file handling with `DEBUG=false`, collect static files first:
+
+```shell
+python manage.py collectstatic
+```
+
 ## Testing and Quality
 
 The repository currently uses GitHub Actions and Python tooling for linting and quality checks.
@@ -61,6 +110,12 @@ Go to the application's root directory and run:
 pytest tests
 ```
 
+To include coverage in the terminal output:
+
+```shell
+pytest tests --cov=learning --cov-report=term-missing
+```
+
 ### GitHub Actions workflows
 
 The repository currently includes these main workflows:
@@ -79,40 +134,6 @@ Releases are managed by Release Please from commits merged into `main`. Use Conv
 When qualifying commits are merged, Release Please opens or updates a release pull request. Merging that release pull request creates the GitHub release, updates the tracked version files and publishes a SemVer tag in the format `v0.0.1`.
 
 The release workflow is defined in `.github/workflows/release.yaml`, while the release rules are configured in `release-please-config.json` and `.release-please-manifest.json`.
-
-## How to run the application locally
-
-Local development uses `learning.settings` by default. \
-Create a `.env` file in the repository root with at least the Django secret key value:
-
-```env
-SECRET_KEY=<secret_key_value>
-```
-You can also set:
-
-```env
-DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,[::1]
-DEBUG=true
-DJANGO_LOG_LEVEL=DEBUG
-```
-
-Static files are served through WhiteNoise. For local development with `DEBUG=true`, Django can serve static assets during `runserver`. If you are testing production-style settings with `DEBUG=false`, collect the static files first:
-
-```shell
-python manage.py collectstatic
-```
-
-Go to the application's root directory, apply migrations and start the development server:
-
-```bash
-python manage.py migrate
-python manage.py runserver
-```
-
-Application is then available at
-`http://127.0.0.1:8000/`
-
-The default local database is SQLite at `trainingdb.sqlite3` in the application root.
 
 ## License
 
