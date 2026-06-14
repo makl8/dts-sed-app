@@ -91,7 +91,6 @@ jobs:
           summary_lines = [
               "## OWASP ZAP Baseline Summary",
               "",
-              f"- Target: {os.environ['TARGET_URL']}",
               f"- Total alerts reported: {total_alerts}",
               f"- Medium/high alerts: {len(findings)}",
               "",
