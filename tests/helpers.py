@@ -1,7 +1,6 @@
 import pytest
 from django.http import Http404
 from django.urls import reverse
-
 from learning import views
 from learning.models import Training
 
@@ -50,3 +49,20 @@ def assert_view_raises_user_not_found_http404(
 
     with pytest.raises(Http404):
         callable_under_test(request, *view_args, **view_kwargs)
+
+
+def assert_extend_training_updates_completion_and_expiry(
+    client, user, training, new_completion_date, submitted_expiry_date
+):
+    client.force_login(user)
+
+    response = client.post(
+        reverse("extend_training", args=[training.pk]),
+        {
+            "completion_date": new_completion_date.isoformat(),
+            "training_expiry_date": submitted_expiry_date,
+        },
+    )
+
+    training.refresh_from_db()
+    return response

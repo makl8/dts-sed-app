@@ -13,6 +13,7 @@ from learning.forms import ExtendTrainingModelForm, LearningSignupForm
 from learning.models import Training
 from tests.helpers import (
     assert_bulk_remove_only_deletes_owned_records,
+    assert_extend_training_updates_completion_and_expiry,
     assert_non_owner_cannot_extend_training,
     assert_view_raises_user_not_found_http404,
 )
@@ -389,18 +390,12 @@ def test_non_owner_cannot_post_updates_to_another_users_training(client, other_u
 @pytest.mark.owasp_a5
 @pytest.mark.django_db
 def test_extend_training_recalculates_expiry_even_when_hidden_field_is_tampered(client, user, user_training):
-    client.force_login(user)
     new_completion_date = date(2025, 3, 1)
 
-    response = client.post(
-        reverse("extend_training", args=[user_training.pk]),
-        {
-            "completion_date": new_completion_date.isoformat(),
-            "training_expiry_date": date(2099, 1, 1).isoformat(),
-        },
+    response = assert_extend_training_updates_completion_and_expiry(
+        client, user, user_training, new_completion_date, date(2099, 1, 1).isoformat()
     )
 
-    user_training.refresh_from_db()
     assert response.status_code == 200
     assert response.context["success"] is True
     assert user_training.completion_date == new_completion_date
