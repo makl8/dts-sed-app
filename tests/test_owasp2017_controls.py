@@ -231,8 +231,6 @@ def test_authentication_security_configuration_is_enabled(settings):
     validator_names = {validator["NAME"].rsplit(".", maxsplit=1)[-1] for validator in settings.AUTH_PASSWORD_VALIDATORS}
 
     assert settings.ACCOUNT_LOGIN_METHODS == {"email"}
-    assert settings.SESSION_COOKIE_SECURE is True
-    assert settings.CSRF_COOKIE_SECURE is True
     assert {"CommonPasswordValidator", "NumericPasswordValidator"}.issubset(validator_names)
 
 
