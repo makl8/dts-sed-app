@@ -18,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
+      ZAP_REPORT_DIR: zap-reports
       TARGET_URL: ${{ secrets.ZAP_TARGET_URL }}
 
     steps:
@@ -33,10 +34,15 @@ jobs:
           fi
           echo "target_url=${TARGET_URL}" >> "${GITHUB_OUTPUT}"
 
+      - name: Prepare writable report directory
+        run: |
+          mkdir -p "${ZAP_REPORT_DIR}"
+          chmod 0777 "${ZAP_REPORT_DIR}"
+
       - name: Run OWASP ZAP baseline scan
         run: |
           docker run --rm \
-            -v "${GITHUB_WORKSPACE}:/zap/wrk/:rw" \
+            -v "${GITHUB_WORKSPACE}/${ZAP_REPORT_DIR}:/zap/wrk/:rw" \
             -t ghcr.io/zaproxy/zaproxy:stable \
             zap-baseline.py \
             -t "${{ steps.target.outputs.target_url }}" \
@@ -59,9 +65,9 @@ jobs:
           import pathlib
           import sys
 
-          report_path = pathlib.Path("zap-report.json")
+            report_path = pathlib.Path(os.environ["ZAP_REPORT_DIR"]) / "zap-report.json"
           if not report_path.exists():
-              print("ZAP report not found: zap-report.json", file=sys.stderr)
+              print(f"ZAP report not found: {report_path}", file=sys.stderr)
               sys.exit(1)
 
           report = json.loads(report_path.read_text(encoding="utf-8"))
@@ -129,7 +135,7 @@ jobs:
         with:
           name: zap-baseline-report
           path: |
-            zap-report.html
-            zap-report.json
-            zap-report.md
+            zap-reports/zap-report.html
+            zap-reports/zap-report.json
+            zap-reports/zap-report.md
           if-no-files-found: error
