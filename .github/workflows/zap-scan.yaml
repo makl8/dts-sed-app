@@ -66,6 +66,7 @@ jobs:
           import sys
 
           report_path = pathlib.Path(os.environ["ZAP_REPORT_DIR"]) / "zap-report.json"
+          summary_path = pathlib.Path(os.environ["ZAP_REPORT_DIR"]) / "zap-summary.md"
           if not report_path.exists():
               print(f"ZAP report not found: {report_path}", file=sys.stderr)
               sys.exit(1)
@@ -113,11 +114,15 @@ jobs:
           else:
               summary_lines.append("No medium or high ZAP alerts found.")
 
-          pathlib.Path(os.environ["GITHUB_STEP_SUMMARY"]).write_text(
+            summary_path.write_text(
               "\n".join(summary_lines) + "\n",
               encoding="utf-8",
           )
+
+            print(summary_path.read_text(encoding="utf-8"))
           PY
+
+            cat "${ZAP_REPORT_DIR}/zap-summary.md" >> "${GITHUB_STEP_SUMMARY}"
 
       - name: Fail on medium or high alerts
         if: always()
