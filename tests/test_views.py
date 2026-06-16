@@ -22,6 +22,16 @@ def test_home_page_regular_user_message(client, user):
 
 
 @pytest.mark.django_db
+def test_home_page_sets_content_security_policy_header(client):
+    response = client.get(reverse("home"))
+
+    assert response.status_code == 200
+    assert response.headers["Content-Security-Policy"]
+    assert "default-src 'self'" in response.headers["Content-Security-Policy"]
+    assert "object-src 'none'" in response.headers["Content-Security-Policy"]
+
+
+@pytest.mark.django_db
 def test_home_page_admin_user_message(client, django_user_model, password):
     admin_user = django_user_model.objects.create_user(
         username="admin-user",

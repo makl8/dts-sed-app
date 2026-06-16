@@ -73,6 +73,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "learning.middleware.ContentSecurityPolicyMiddleware",
 ]
 
 ROOT_URLCONF = "learning.urls"
