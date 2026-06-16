@@ -65,7 +65,7 @@ jobs:
           import pathlib
           import sys
 
-            report_path = pathlib.Path(os.environ["ZAP_REPORT_DIR"]) / "zap-report.json"
+          report_path = pathlib.Path(os.environ["ZAP_REPORT_DIR"]) / "zap-report.json"
           if not report_path.exists():
               print(f"ZAP report not found: {report_path}", file=sys.stderr)
               sys.exit(1)
