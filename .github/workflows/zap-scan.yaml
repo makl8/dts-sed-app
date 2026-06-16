@@ -114,15 +114,15 @@ jobs:
           else:
               summary_lines.append("No medium or high ZAP alerts found.")
 
-            summary_path.write_text(
+          summary_path.write_text(
               "\n".join(summary_lines) + "\n",
               encoding="utf-8",
           )
 
-            print(summary_path.read_text(encoding="utf-8"))
+          print(summary_path.read_text(encoding="utf-8"))
           PY
 
-            cat "${ZAP_REPORT_DIR}/zap-summary.md" >> "${GITHUB_STEP_SUMMARY}"
+          cat "${ZAP_REPORT_DIR}/zap-summary.md" >> "${GITHUB_STEP_SUMMARY}"
 
       - name: Fail on medium or high alerts
         if: always()
