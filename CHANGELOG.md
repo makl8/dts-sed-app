@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/makl8/dts-sed-app/compare/v0.1.1...v0.1.2) (2026-06-16)
+
+
+### 🐛 Bug Fixes
+
+* Fix ZAP scan ([#30](https://github.com/makl8/dts-sed-app/issues/30)) ([4796669](https://github.com/makl8/dts-sed-app/commit/4796669004e26746fe609e498df7ae6745389075))
+
 ## [0.1.1](https://github.com/makl8/dts-sed-app/compare/v0.1.0...v0.1.1) (2026-06-14)
 
 
