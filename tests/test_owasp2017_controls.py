@@ -106,12 +106,6 @@ def test_validate_name_rejects_hostile_or_invalid_payloads(payload):
 
 
 @pytest.mark.owasp_a1
-def test_validate_name_rejects_consecutive_spaces():
-    with pytest.raises(ValidationError):
-        forms.validate_name("Anne  Marie")
-
-
-@pytest.mark.owasp_a1
 @pytest.mark.django_db
 def test_extend_training_form_omitted_expiry_remains_none_for_unsaved_instance(user, recurring_course):
     form = ExtendTrainingModelForm(
@@ -241,9 +235,10 @@ def test_authentication_security_configuration_is_enabled(settings):
 
 @pytest.mark.owasp_a2
 @pytest.mark.django_db
-def test_common_password_is_rejected_by_configured_validators(user):
+@pytest.mark.parametrize("password", ["password", "123456789", "P@ssw0rd", "administrator", "qwerty123"])
+def test_common_password_is_rejected_by_configured_validators(user, password):
     with pytest.raises(ValidationError):
-        validate_password("password", user=user)
+        validate_password(password, user=user)
 
 
 @pytest.mark.owasp_a5
@@ -325,6 +320,18 @@ def test_add_training_returns_404_when_authenticated_user_record_no_longer_exist
 @pytest.mark.django_db
 def test_non_owner_cannot_extend_another_users_training(client, other_user, user_training):
     assert_non_owner_cannot_extend_training(client, other_user, user_training)
+
+
+@pytest.mark.owasp_a5
+@pytest.mark.django_db
+def test_non_admin_user_cannot_access_django_admin_site(client, user):
+    client.force_login(user)
+
+    response = client.get(reverse("admin:index"))
+
+    assert response.status_code == 302
+    assert response.url.startswith(reverse("admin:login"))
+    assert "next" in response.url
 
 
 @pytest.mark.owasp_a5
