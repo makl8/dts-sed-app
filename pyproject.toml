@@ -9,7 +9,7 @@ dependencies = [
     "django-allauth-ui==1.8.1",
     "django-widget-tweaks==1.5.1",
     "slippers==0.6.3",  # allauth-ui v1.8.1 cannot use v7
-    "typeguard==2.13.3",  # slippers does not support newer versions
+    "typeguard==4.6.0",  # slippers does not support newer versions
     "whitenoise==6.12.0",
     "python-dotenv==1.2.2",
 ]
