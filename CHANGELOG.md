@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.3](https://github.com/makl8/dts-sed-app/compare/v0.1.2...v0.1.3) (2026-08-04)
+
+
+### 🧰 Maintenance
+
+* **deps-dev:** Update pylint requirement from &gt;=4.0.5 to &gt;=4.0.6 ([#36](https://github.com/makl8/dts-sed-app/issues/36)) ([4f9160c](https://github.com/makl8/dts-sed-app/commit/4f9160ce977d084cd6f29c37d584a4c30fa78c3c))
+* **deps-dev:** Update pytest requirement from &gt;=9.0.3 to &gt;=9.1.1 ([#38](https://github.com/makl8/dts-sed-app/issues/38)) ([b578c96](https://github.com/makl8/dts-sed-app/commit/b578c96c37055ed36e318030394146e2550938b1))
+* **deps-dev:** Update ruff requirement from &gt;=0.15.15 to &gt;=0.16.0 ([#41](https://github.com/makl8/dts-sed-app/issues/41)) ([6fe4bb9](https://github.com/makl8/dts-sed-app/commit/6fe4bb9ff956848b4a2fc39af83d5e8e4b56a783))
+* **deps:** Bump actions/checkout from 6 to 7 ([#35](https://github.com/makl8/dts-sed-app/issues/35)) ([3a5cb32](https://github.com/makl8/dts-sed-app/commit/3a5cb3273b0a8b41b1f2f5be5404acbad3036aca))
+* **deps:** Bump actions/setup-python from 6 to 7 ([#43](https://github.com/makl8/dts-sed-app/issues/43)) ([d96639f](https://github.com/makl8/dts-sed-app/commit/d96639fbbec86b6dd0bea52b1a829732be1df8cd))
+* Improve tests and bump actions/checkout version ([#33](https://github.com/makl8/dts-sed-app/issues/33)) ([da735f7](https://github.com/makl8/dts-sed-app/commit/da735f791bdcabfb60664cb62e13ebc94509ba07))
+
 ## [0.1.2](https://github.com/makl8/dts-sed-app/compare/v0.1.1...v0.1.2) (2026-06-16)
 
 
