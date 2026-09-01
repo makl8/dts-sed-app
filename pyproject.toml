@@ -25,7 +25,7 @@ optional-dependencies.dev = [
 optional-dependencies.test = [
     "pytest>=9.1.1",
     "pytest-cov>=7.1",
-    "pytest-django>=4.12",
+    "pytest-django>=4.14.0",
 ]
 
 [tool.setuptools.packages.find]
