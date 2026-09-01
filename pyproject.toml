@@ -5,7 +5,7 @@ requires-python = ">= 3.10"
 dependencies = [
     "Django==5.2.14",  # latest version supported by python 3.10
 #    "Django==6.0.5",
-    "django-allauth==65.18.0",
+    "django-allauth==65.19.1",
     "django-allauth-ui==1.8.1",
     "django-widget-tweaks==1.5.1",
     "slippers==0.6.3",  # allauth-ui v1.8.1 cannot use v7
